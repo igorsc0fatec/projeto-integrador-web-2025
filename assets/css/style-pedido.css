@@ -1,0 +1,151 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.container-body {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    height: 90vh; /* Altura fixa para o container */
+}
+
+.titulo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ea1d2c;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.lista-pedidos {
+    overflow-y: auto; /* Adiciona scroll vertical */
+    flex: 1; /* Faz a lista ocupar o espaço restante */
+    padding-right: 10px; /* Espaço para o scroll */
+}
+
+.pedido {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pedido:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.restaurante {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.restaurante-imagem {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.restaurante-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.restaurante-info p {
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detalhes-pedido p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status {
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status.aceito {
+    color: #28a745;
+}
+
+.status.recusado {
+    color: #dc3545;
+}
+
+.botoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.botoes button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.botoes .ajuda {
+    background-color: #ea1d2c;
+    color: white;
+}
+
+.botoes .ajuda:hover {
+    background-color: #c81a27;
+}
+
+.botoes .detalhes {
+    background-color: #6c757d;
+    color: white;
+}
+
+.botoes .detalhes:hover {
+    background-color: #5a6268;
+}

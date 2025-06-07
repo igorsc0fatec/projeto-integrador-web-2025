@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.header {
+    flex: 0 0 auto;
+}
+
+.contacts-container {
+    padding: 20px;
+}
+
+.contact {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.contact img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.contact a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+}

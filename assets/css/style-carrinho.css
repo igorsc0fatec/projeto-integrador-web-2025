@@ -1,0 +1,81 @@
+.ui-w-40 {
+    width: 40px !important;
+    height: auto;
+}
+
+.card {
+    box-shadow: 0 1px 15px 1px rgba(52, 40, 104, .08);
+}
+
+.ui-product-color {
+    display: inline-block;
+    overflow: hidden;
+    margin: .144em;
+    width: .875rem;
+    height: .875rem;
+    border-radius: 10rem;
+    -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+    vertical-align: middle;
+}
+
+.btn-link-style {
+    display: inline-block;
+    font-weight: 400;
+    color: #007bff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn-link-style:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.btn-link-style:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+/* Estilo do botão "Usar Código" */
+.btn-sm {
+    padding: 5px 15px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.form-control-quantity {
+    width: 80px;
+}
+
+.remove-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.remove-button {
+    font-size: 50px;
+    /* Aumenta o tamanho do ícone */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+.remove-button:hover {
+    color: darkred;
+}

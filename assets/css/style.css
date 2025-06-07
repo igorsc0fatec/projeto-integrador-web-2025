@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Open+Sans:wght@300;400;500;600&display=swap');
+* {
+    padding: 10;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+
+.form-container {
+    margin-top: 5rem; /* Adiciona uma margem superior para empurrar o .form-container para baixo */
+    width: 90%;
+    max-width: 1100px;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.212);
+    margin: 0 auto; /* Centraliza horizontalmente */
+}
+
+.form-image {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fde3a7d7;
+    padding: 1rem;
+}
+
+.form-image img {
+    width: 31rem;
+}
+
+.form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 3rem;
+}
+
+.form-header {
+    margin-bottom: 2rem; /* Ajuste a margem inferior conforme necessário */
+    position: relative; /* Adicione posição relativa para o .form-header */
+}
+
+.login-button {
+    display: flex;
+    align-items: center;
+}
+
+.login-button button {
+    border: none;
+    background-color: #6c63ff;
+    padding: 0.4rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#img {
+    display: none; /* Esconde o elemento de input original */
+}
+
+.upload-button {
+    border: none;
+    background-color: #6c63ff;
+    color: white; /* Cor do texto branco */
+    padding: 0.4rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload-button:hover {
+    background-color: #564fd9; /* Cor diferente quando o botão é hover */
+}
+
+.upload-button label {
+    color: white; /* Cor do texto branco */
+}
+
+
+.login-button button:hover {
+    background-color: #6b63fff1;
+}
+
+.login-button button a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #fff;
+}
+
+.form-header h1 {
+    position: static; /* Remova a posição absoluta do título */
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.2rem;
+}
+
+.input-box input,
+.input-box select {
+    margin: 0.6rem 0;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001c;
+    font-size: 0.8rem;
+}
+
+.input-box textarea {
+    margin: 0.6rem 0;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001c;
+    font-size: 0.8rem;
+    width: 400px; /* Tamanho fixo para o textarea */
+    height: 150px; /* Tamanho fixo para o textarea */
+    resize: none; /* Bloqueia o redimensionamento */
+}
+
+
+.input-box input:hover {
+    background-color: #eeeeee75;
+}
+
+.input-box input:focus-visible {
+    outline: 1px solid #6c63ff;
+}
+
+.input-box label,
+.gender-title h6 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #000000c0;
+}
+
+.input-box input::placeholder {
+    color: #000000be;
+}
+
+.gender-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.62rem;
+    padding: 0 .5rem;
+}
+
+.gender-input {
+    display: flex;
+    align-items: center;
+}
+
+.gender-input input {
+    margin-right: 0.35rem;
+}
+
+.gender-input label {
+    font-size: 0.81rem;
+    font-weight: 600;
+    color: #000000c0;
+}
+
+.continue-button button {
+    width: 100%;
+    margin-top: 2.5rem;
+    border: none;
+    background-color: #6c63ff;
+    padding: 0.62rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.continue-button button:hover {
+    background-color: #6b63fff1;
+}
+
+.continue-button button a {
+    text-decoration: none;
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+@media screen and (max-width: 1330px) {
+    .form-image {
+        display: none;
+    }
+    .container {
+        width: 50%;
+    }
+    .form {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1064px) {
+    .container {
+        width: 90%;
+        height: auto;
+    }
+    .input-group {
+        flex-direction: column;
+        z-index: 5;
+        padding-right: 5rem;
+        max-height: 10rem;
+        overflow-y: scroll;
+        flex-wrap: nowrap;
+    }
+    .gender-inputs {
+        margin-top: 2rem;
+    }
+    .gender-group {
+        flex-direction: column;
+    }
+    .gender-title h6 {
+        margin: 0;
+    }
+    .gender-input {
+        margin-top: 0.5rem;
+    }
+}
+
+
+
+
+
+/* Estilo para o contêiner da pesquisa */
+.pesquisa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilo para a etiqueta (label) da pesquisa */
+.pesquisa label {
+    font-size: 0.81rem;
+    font-weight: 600;
+    color: #000000c0;
+    margin-bottom: 0.5rem;
+}
+
+
+/* Estilo para o wrapper do input e do botão */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    width: 100%; /* Garante que o wrapper ocupe toda a largura disponível */
+    max-width: 400px; /* Defina um máximo para evitar que o input fique muito largo em telas grandes */
+}
+
+
+.input-wrapper input[type="text"],
+.input-wrapper select,
+.input-wrapper textarea {
+    flex: 1; /* Ocupa todo o espaço disponível */
+    min-width: 700px; /* Define um tamanho mínimo para o input */
+    width: auto; /* Permite que o input ajuste sua largura conforme necessário */
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001c;
+    font-size: 0.8rem;
+    margin-right: 10px;
+}
+
+
+
+/* Estilo para o botão de busca */
+.input-wrapper button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    border: none;
+    background-color: #6c63ff;
+    padding: 0.62rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: Arial, sans-serif; /* Mudar a fonte para Arial ou outra de sua escolha */
+    color: white; /* Mudar a cor do texto para branco */
+}
+
+
+
+/* Estilo para o botão de busca quando passa o mouse por cima */
+.input-wrapper button:hover {
+    background-color: #45a049;
+}
+
+
+
+  /* Estilo para a tabela */
+  #minhaTabela {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  /* Estilo para as células da tabela */
+  #minhaTabela td, #minhaTabela th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  /* Estilo para as células do cabeçalho da tabela */
+  #minhaTabela th {
+    background-color: #f2f2f2;
+  }
+
+  /* Estilo para a imagem dentro da célula da tabela */
+  #minhaTabela img {
+    transition: transform 0.3s ease; /* Adiciona uma transição suave ao transformar a imagem */
+
+}
+
+/* Ao passar o mouse sobre a imagem, aumenta o tamanho */
+#minhaTabela img:hover {
+    transform: scale(4) translateX(50%); /* Aumenta a imagem para 400% do tamanho original e a move 50% para a esquerda */
+}
+
+/* Estilo para a div que envolve a tabela */
+.tabela-scroll {
+    max-height: 500px;
+    /* Altura máxima da div */
+    overflow-y: auto;
+    /* Adiciona uma barra de rolagem vertical */
+    border: 1px solid #ccc;
+    /* Adiciona uma borda para visualização */
+ }
+
+.error {
+    color: red;
+}
+
+input[readonly] {
+    background-color: #d3d3d3;
+}

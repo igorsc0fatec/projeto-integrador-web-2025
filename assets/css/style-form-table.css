@@ -1,0 +1,402 @@
+/* Resetando margin e definindo box-sizing */
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para a seção do formulário */
+.form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    /* Alinha os formulários verticalmente */
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: #fff;
+    padding: 3rem;
+}
+
+/* Estilos principais do container do formulário */
+.form-container {
+    margin-top: 5rem;
+    max-width: 1000px;
+    display: flex;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.212);
+    margin: 0 auto;
+    /* Centraliza horizontalmente */
+}
+
+/* Estilos para a seção da imagem do formulário */
+.form-image {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fde3a7d7;
+    padding: 1rem;
+}
+
+.form-image img {
+    width: 31rem;
+}
+
+/* Estilos para caixas de entrada de dados */
+.input-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.1rem;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.2rem;
+}
+
+.input-box input,
+.input-box select,
+.input-box textarea {
+    margin: 0.6rem 0;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001c;
+    font-size: 0.8rem;
+}
+
+/* Estilos adicionais para textarea */
+.input-box textarea {
+    width: 400px;
+    height: 150px;
+    resize: none;
+}
+
+/* Efeitos de hover e focus para inputs */
+.input-box input:hover,
+.input-box textarea:hover,
+.input-box select:hover {
+    background-color: #eeeeee75;
+}
+
+.input-box input:focus-visible,
+.input-box textarea:focus-visible,
+.input-box select:focus-visible {
+    outline: 1px solid #6c63ff;
+}
+
+/* Estilos para labels */
+.input-box label,
+.gender-title h6 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #000000c0;
+}
+
+/* Placeholder dos inputs */
+.input-box input::placeholder,
+.input-box textarea::placeholder {
+    color: #000000be;
+}
+
+.dados input {
+    margin: 0.6rem 0;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001c;
+    font-size: 0.8rem;
+    width: 300px;
+    margin-right: 5px;
+    /* Ajuste conforme necessário */
+}
+
+/* Estilos para os botões dentro de .dados */
+.dados button {
+    align-self: flex-start;
+    /* Isso vai alinhar os botões à esquerda */
+    padding: 0.8rem 1.2rem;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s ease;
+}
+
+.dados button:hover {
+    background-color: #5a53e6;
+}
+
+form {
+    display: block;
+    /* Garante que cada formulário seja exibido como bloco */
+    margin-bottom: 0.2rem;
+    /* Dá um espaço entre os formulários */
+}
+
+/* Evitar que os campos e botões fiquem lado a lado */
+.dados input,
+.dados button {
+    margin-bottom: 1rem;
+}
+
+/* Estilos adicionais para os campos de senha (como no input-box) */
+.dados input:hover {
+    background-color: #eeeeee75;
+    /* Cor de fundo quando o mouse passa sobre o input */
+}
+
+/* Efeitos de focus nos campos de input (email, senha, confirma senha) */
+.dados input:focus-visible {
+    outline: 1px solid #6c63ff;
+}
+
+/* Esconde o input de upload de imagem original */
+#img {
+    display: none;
+}
+
+/* Estiliza o botão de upload */
+.upload-button {
+    border: none;
+    background-color: #6c63ff;
+    color: white;
+    padding: 0.2rem 0.75rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload-button:hover {
+    background-color: #564fd9;
+}
+
+/* Estilos para cabeçalhos */
+h1,
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-family: 'Dancing Script', sans-serif;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+/* Estilos para o botão de continuar */
+.continue-button button {
+    width: 100%;
+    margin-top: 0.2rem;
+    border: none;
+    background-color: #6c63ff;
+    padding: 0.62rem;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.continue-button button:hover {
+    background-color: #564fd9;
+}
+
+/* Estilos para a pesquisa */
+.pesquisa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pesquisa label {
+    font-size: 0.81rem;
+    font-weight: 600;
+    color: #000000c0;
+    margin-bottom: 0.5rem;
+}
+
+/* Wrapper para input de pesquisa e botão */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.input-wrapper input[type="text"] {
+    flex: 1;
+    min-width: 700px;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001c;
+    font-size: 0.8rem;
+    margin-right: 10px;
+}
+
+.input-wrapper button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    border: none;
+    background-color: #6c63ff;
+    color: white;
+    cursor: pointer;
+}
+
+.input-wrapper button:hover {
+    background-color: #564fd9;
+}
+
+/* Estilos para a tabela */
+#minhaTabela {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#minhaTabela td,
+#minhaTabela th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#minhaTabela th {
+    background-color: #f2f2f2;
+}
+
+#minhaTabela img {
+    transition: transform 0.3s ease;
+}
+
+#minhaTabela img:hover {
+    transform: scale(4) translateX(50%);
+}
+
+/* Wrapper da tabela */
+.tabela-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
+
+/* Estilos para mensagens de erro */
+.error {
+    color: red;
+}
+
+/* Estilo para inputs somente leitura */
+input[readonly] {
+    background-color: #d3d3d3;
+}
+
+/* Cabeçalho do formulário */
+.form-header {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+/* Grupo de inputs */
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+        margin-top: 2rem;
+    }
+
+    .form-image,
+    .form {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .form-image img {
+        width: 100%;
+    }
+
+    .input-box textarea {
+        width: 100%;
+    }
+
+    .input-wrapper input[type="text"] {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .input-wrapper input[type="text"] {
+        min-width: 150px;
+    }
+}
+
+/* Estilo do input file original */
+input[type="file"] {
+    display: none;
+}
+
+input[type="file"]+label {
+    border: none;
+    background-color: #6c63ff;
+    color: white;
+    padding: 0.2rem 0.75rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+input[type="file"]+label:hover {
+    background-color: #564fd9;
+}
+
+.range-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.range-container input[type="range"] {
+    flex-grow: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.range-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.range-container #distanceValue {
+    min-width: 50px;
+    text-align: right;
+    font-weight: bold;
+}

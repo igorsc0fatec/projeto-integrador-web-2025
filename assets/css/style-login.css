@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,900;1,400;1,900&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  background-color: #0c0ce94d;
+}
+
+.login-form {
+  margin-left: 15px;
+  /* margem à esquerda */
+  margin-right: 15px;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  /* ajuste de largura */
+  position: relative; /* Para posicionamento relativo */
+}
+
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #6c63ff;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #6c63ff; /* Adiciona a borda */
+    border-radius: 5px;
+    outline: none; /* Opcional: remove a borda padrão ao focar */
+    box-sizing: border-box; /* Garante que a borda não aumente a largura total */
+}
+
+.login-form input[type="submit"]{
+  width: 80%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #6c63ff;
+  color: white;
+  font-size: 15pt;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.login-form a {
+  text-decoration: none;
+  color: #6c63ff;
+}
+
+.image {
+  flex: 1;
+  text-align: right;
+  height: 100vh;
+  overflow: hidden;
+  /* Para garantir que a imagem não ultrapasse os limites da div */
+}
+
+.image img {
+  width: 100%;
+  /* Ajusta a largura da imagem para preencher a div */
+  height: 100%;
+  /* Ajusta a altura da imagem para preencher a div */
+  object-fit: cover;
+  /* Mantém a proporção da imagem e corta o excesso para preencher a div */
+}
+
+.back-button {
+  position: absolute; /* Posicionamento absoluto */
+  bottom: 10px; /* Distância do fundo */
+  right: 10px; /* Distância da direita */
+}
+
+.back-button a {
+  text-decoration: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #6c63ff;
+}

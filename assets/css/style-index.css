@@ -1,0 +1,465 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+h1,
+h2 {
+  margin-top: 35px;
+  margin-bottom: 5px;
+  text-align: center;
+  font-family: 'Futura', sans-serif;
+  font-size: 36px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+h1 {
+  color: #333;
+}
+
+h2 {
+  color: white;
+}
+
+p {
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.container {
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 40px 20px;
+}
+
+#titulo {
+  width: 100%;
+  margin-top: 25px;
+}
+
+#logo a {
+  text-decoration: none;
+}
+
+/* Carousel Principal - Responsivo */
+.carousel {
+  width: 100%;
+  max-width: 1200px;
+  height: 1000px;
+  /* Aumentei o tamanho do banner */
+  margin: 20px auto -400px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  width: 300%;
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  width: 100%;
+  /* Cada slide ocupa 100% do espaço visível */
+  height: 100%;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A navegação será posicionada dentro do carousel */
+.navigation {
+  position: absolute;
+  top: 50%;
+  /* Centraliza verticalmente */
+  left: 50%;
+  transform: translate(-50%, 80%);
+  /* Centraliza horizontal e verticalmente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos das bolinhas de navegação */
+.navigation label {
+  width: 25px;
+  /* Aumentei o tamanho das bolinhas */
+  height: 25px;
+  /* Aumentei o tamanho das bolinhas */
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.navigation label:hover {
+  background-color: #666;
+}
+
+.carousel input[type="radio"] {
+  display: none;
+}
+
+#slide1:checked~.slides {
+  transform: translateX(0);
+}
+
+#slide2:checked~.slides {
+  transform: translateX(-33.333%);
+}
+
+#slide3:checked~.slides {
+  transform: translateX(-66.666%);
+}
+
+/* Mudança da cor da bolinha ativa */
+#slide1:checked~.navigation label[for="slide1"],
+#slide2:checked~.navigation label[for="slide2"],
+#slide3:checked~.navigation label[for="slide3"] {
+  background-color: rgb(0, 0, 0);
+}
+
+/* Ajustes Responsivos para o Carousel */
+@media (max-width: 768px) {
+  .carousel {
+    height: 600px;
+    /* Menor altura para telas pequenas */
+  }
+}
+
+/* Ajustes para o Carousel de Produtos */
+.carousel-2 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  gap: 20px; /* Espaçamento entre os cards */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 250px; /* Largura fixa */
+  height: 450px; /* Altura fixa para todos os cards */
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-image {
+  width: 100%;
+  height: 200px; /* Altura fixa para o contêiner da imagem */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 15px 15px 0 0;
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+.card-image img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.card-text {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.card-body {
+  font-size: 1.1em; /* Fonte maior para a descrição */
+  color: #666;
+  line-height: 1.4;
+  margin-bottom: 15px;
+  overflow: hidden; /* Esconde o conteúdo que ultrapassar a altura */
+  flex-grow: 1; /* Ocupa o espaço restante */
+  max-height: 100px; /* Limita a altura da descrição */
+  height: 100px; /* Define altura fixa para o corpo */
+}
+
+.frete-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.frete-icon {
+  font-size: 1.2em;
+}
+
+.frete-text {
+  font-size: 1.1em; /* Aumentei o tamanho da fonte do frete */
+  color: #555;
+}
+
+.card-price {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e91e63;
+  margin-bottom: 15px;
+}
+
+.price-text {
+  font-weight: normal;
+  color: #333;
+}
+
+.price-value {
+  color: #e91e63;
+}
+
+.card-form {
+  padding: 15px;
+  background: #f5f5f5;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.add-to-cart {
+  background: #e91e63;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease;
+}
+
+.add-to-cart:hover {
+  background: #c2185b;
+}
+
+.add-to-cart i {
+  margin-right: 8px;
+}
+ 
+/* Responsividade */
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    flex: 1 1 100%;
+  }
+}
+
+
+#container_ajuda {
+  text-align: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 0 auto;
+  max-width: 1050px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+}
+
+/* Correção de largura para evitar barra lateral */
+body,
+html {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  /* Evita que a barra lateral apareça devido a overflow */
+}
+
+#paragrafo1:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+#paragrafo2,
+#paragrafo3,
+#paragrafo4 {
+  display: none;
+}
+
+/*---CSS-Perfil ---*/
+.profile-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f1e1ff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+  width: 900px;
+  margin: 20px auto;
+}
+
+.profile-banner img {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.profile-banner h1 {
+  font-size: 2em;
+  margin-bottom: 16px;
+}
+
+.profile-banner .info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-banner .info div {
+  margin: 5px 0;
+}
+
+.profile-banner .info div i {
+  margin-right: 5px;
+}
+
+.profile-banner .info div span {
+  font-weight: bold;
+}
+
+.icon-whatsapp {
+  color: #25D366;
+}
+
+.icon-celular {
+  color: #4285F4;
+}
+
+.telefone-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.telefone-item {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.telefone-item i {
+  margin-right: 8px;
+}
+
+@media (max-width: 900px) {
+  .profile-banner {
+    width: 100%;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-banner {
+    padding: 10px;
+  }
+
+  .profile-banner h1 {
+    font-size: 1.5em;
+    margin-bottom: 12px;
+  }
+
+  .profile-banner img {
+    height: 120px;
+    width: 120px;
+  }
+
+  .profile-banner .info div {
+    margin: 4px 0;
+  }
+}
+
+.cart-counter {
+  position: absolute;
+  top: -10px;
+  right: 4px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0.15px 7px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.horario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f3e5f5;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: #4a148c;
+  font-weight: 500;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.horario i {
+  color: #7b1fa2;
+  font-size: 18px;
+}
+
+.horario:hover {
+  background-color: #e1bee7;
+}
+
+.horario.fechado {
+  background-color: #eeeeee;
+  color: #888;
+  box-shadow: none;
+}
+
+.horario.fechado i {
+  color: #888;
+}
