@@ -74,7 +74,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
         $senhaUsuario = $_POST['senhaUsuario'];
 
         // Verifica se a senha foi passada e atualiza no banco de dados
-        if ($usuarioController->updateSenha($senhaUsuario)) {
+        if ($usuarioController->updateSenha($senhaUsuario, $_SESSION['idUsuario'])) {
             $response = 'ok';
         } else {
             $response = 'erro';
@@ -402,7 +402,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
                     });
                 </script>";
         } else {
-            $codigo = $usuarioController->gerarCodigo();
+            $codigo = $usuarioController->gerarCodigo($_SESSION['idUsuario']);
             $usuarioController->enviaEmail($_POST['emailUsuario'], $codigo);
             echo gerarScriptEmail($_POST['emailUsuario']);
         }
@@ -412,7 +412,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
         $novaSenha = $_POST['senhaUsuario'];
     
         if ($_POST['senhaUsuario'] === $_POST['confirmaSenha']) {
-            $codigo = $usuarioController->gerarCodigo();
+            $codigo = $usuarioController->gerarCodigo($_SESSION['idUsuario']);
             $emailUsuario = $_SESSION['emailUsuario'];
             $usuarioController->enviaEmail($emailUsuario, $codigo);
             echo gerarScriptSenha($novaSenha);

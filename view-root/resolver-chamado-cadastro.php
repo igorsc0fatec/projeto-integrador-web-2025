@@ -1,7 +1,9 @@
 <?php
 require_once '../controller/controller-suporte.php';
+require_once '../model/dao.php'; // Adicione esta linha para acessar o DAO diretamente
 
 $controller = new ControllerSuporte();
+$dao = new DAO(); // Instância do DAO para operações no banco
 
 // Obtém o ID do suporte da URL
 $id_suporte = $_GET['id'] ?? null;
@@ -38,15 +40,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $controller->marcarComoResolvido($id_suporte);
         
         if ($result['success']) {
+            // Se for um chamado de cadastro/dados, atualiza os dados do cliente
+            if (in_array($suporte['tipo_suporte'], ['Problemas com Dados', 'Problemas com Cadastro'])) {
+                $nome = $_POST['nome'] ?? '';
+                $email = $_POST['email'] ?? '';
+                $cpf = $_POST['cpf'] ?? '';
+                
+                try {
+                    // Primeiro, obtemos o ID do cliente
+                    $sql_cliente = "SELECT c.id_cliente 
+                                    FROM tb_cliente c
+                                    JOIN tb_usuario u ON c.id_usuario = u.id_usuario
+                                    WHERE u.email_usuario = '" . $dao->escape_string($suporte['email_usuario']) . "'";
+                    $cliente = $dao->getData($sql_cliente);
+                    
+                    if ($cliente && count($cliente) > 0) {
+                        $id_cliente = $cliente[0]['id_cliente'];
+                        
+                        // Atualiza os dados do cliente
+                        $sql_update = "UPDATE tb_cliente SET 
+                                      nome_cliente = '" . $dao->escape_string($nome) . "',
+                                      cpf_cliente = '" . $dao->escape_string($cpf) . "'
+                                      WHERE id_cliente = " . $id_cliente;
+                                      
+                        $dao->execute($sql_update);
+                        
+                        // Atualiza o email do usuário se foi alterado
+                        if ($email != $suporte['email_usuario']) {
+                            $sql_update_email = "UPDATE tb_usuario SET 
+                                               email_usuario = '" . $dao->escape_string($email) . "'
+                                               WHERE id_usuario = (SELECT id_usuario FROM tb_cliente WHERE id_cliente = " . $id_cliente . ")";
+                            $dao->execute($sql_update_email);
+                        }
+                        
+                        $mensagem = '<div class="alert alert-success">Chamado resolvido e dados do cliente atualizados com sucesso! E-mail enviado ao solicitante.</div>';
+                    } else {
+                        $mensagem = '<div class="alert alert-danger">Cliente não encontrado no sistema.</div>';
+                    }
+                } catch (Exception $e) {
+                    $mensagem = '<div class="alert alert-danger">Erro ao atualizar dados do cliente: ' . htmlspecialchars($e->getMessage()) . '</div>';
+                }
+            }
+            
             // Envia e-mail conforme o tipo de suporte
             $assunto = "Seu chamado #{$id_suporte} foi resolvido";
             $mensagem_email = "";
             
-            if (in_array($suporte['tipo_suporte'], ['Problemas com login', 'Atualizar dados pessoais'])) {
+            if (in_array($suporte['tipo_suporte'], ['Problemas com Dados', 'Problemas com Cadastro'])) {
                 // Caso seja sobre senha ou dados pessoais
                 $nova_senha = bin2hex(random_bytes(4)); // Gera uma senha aleatória simples
                 $mensagem_email = "Seu chamado foi resolvido! Sua nova senha é: $nova_senha\n\n";
                 $mensagem_email .= "Por favor, altere esta senha após o primeiro login.\n\n";
+                
+                // Atualiza a senha no banco de dados
+                try {
+                    $senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
+                    $sql_update_senha = "UPDATE tb_usuario SET 
+                                        senha_usuario = '" . $dao->escape_string($senha_hash) . "'
+                                        WHERE id_usuario = (SELECT id_usuario FROM tb_cliente WHERE id_cliente = " . $id_cliente . ")";
+                    $dao->execute($sql_update_senha);
+                } catch (Exception $e) {
+                    // Não interrompe o fluxo, apenas registra o erro
+                    error_log("Erro ao atualizar senha: " . $e->getMessage());
+                }
             } else {
                 // Outros tipos de chamados
                 $mensagem_email = "Seu chamado foi resolvido!\n\n";
@@ -59,7 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Aqui você implementaria o envio real de e-mail
             // mail($suporte['email_usuario'], $assunto, $mensagem_email);
             
-            $mensagem = '<div class="alert alert-success">Chamado resolvido com sucesso! E-mail enviado ao solicitante.</div>';
+            if (empty($mensagem)) {
+                $mensagem = '<div class="alert alert-success">Chamado resolvido com sucesso! E-mail enviado ao solicitante.</div>';
+            }
         } else {
             $mensagem = '<div class="alert alert-danger">Erro ao resolver chamado: ' . htmlspecialchars($result['message']) . '</div>';
         }
@@ -80,7 +138,7 @@ function mostrarStatus($resolvido) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resolver Chamado #<?php echo $id_suporte; ?> | Sistema Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+        <style>
         :root {
             --primary-color: #4361ee;
             --secondary-color: #3f37c9;
@@ -367,28 +425,23 @@ function mostrarStatus($resolvido) {
                                   placeholder="Descreva como o problema foi resolvido..."></textarea>
                     </div>
                     
-                    <?php if (in_array($suporte['tipo_suporte'], ['Problemas com login', 'Atualizar dados pessoais'])): ?>
+                    <?php if (in_array($suporte['tipo_suporte'], ['Problemas com Dados', 'Problemas com Cadastro'])): ?>
                         <div class="dados-form">
                             <h3><i class="fas fa-user-edit"></i> Dados do Cliente para Atualização</h3>
                             
                             <div class="form-group">
                                 <label for="nome">Nome Completo:</label>
-                                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($suporte['nome_usuario']); ?>">
+                                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($suporte['nome_usuario']); ?>" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="email">E-mail:</label>
-                                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($suporte['email_usuario']); ?>">
+                                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($suporte['email_usuario']); ?>" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="cpf">CPF:</label>
-                                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="telefone">Telefone:</label>
-                                <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+                                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
                             </div>
                             
                             <div class="info-item" style="background: #fff3cd; padding: 1rem; border-radius: 4px;">

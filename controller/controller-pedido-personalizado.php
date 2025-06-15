@@ -23,7 +23,6 @@ class ControllerPedidoPersonalizado
             $idFormato = isset($_POST['descFormato']) && !empty($_POST['descFormato']) ? (int) $_POST['descFormato'] : null;
             $idDecoracao = isset($_POST['descDecoracao']) && !empty($_POST['descDecoracao']) ? (int) $_POST['descDecoracao'] : null;
 
-            $this->pedidoPersonalizado->setStatus('Pedido Recebido!');
             $this->pedidoPersonalizado->setIdPersonalizado($_POST['idPersonalizado']);
             $this->pedidoPersonalizado->setIdCliente($_SESSION['idCliente']);
 
@@ -35,10 +34,9 @@ class ControllerPedidoPersonalizado
 
             // Montando a consulta SQL para inserção
             $sql = "INSERT INTO tb_pedido_personalizado (valor_total, desconto, peso, frete, id_forma_pagamento, 
-                status, id_massa, id_recheio, id_cobertura, id_formato, id_decoracao, id_personalizado, id_cliente) 
+            id_massa, id_recheio, id_cobertura, id_formato, id_decoracao, id_personalizado, id_cliente) 
             VALUES (
                 '$valorTotal', '$desconto',  $peso_kg, '$frete', NULL, 
-                '{$this->pedidoPersonalizado->getStatus()}', 
                 " . ($idMassa !== null ? $idMassa : 'NULL') . ", 
                 " . ($idRecheio !== null ? $idRecheio : 'NULL') . ", 
                 " . ($idCobertura !== null ? $idCobertura : 'NULL') . ", 
@@ -51,11 +49,13 @@ class ControllerPedidoPersonalizado
             $result = $this->dao->execute($sql);
 
             if ($result) {
-                $idPedidoPersonalizado = $this->dao->getData("SELECT id_pedido_personalizado FROM tb_pedido_personalizado ORDER BY id_pedido_personalizado DESC LIMIT 1");
+                $idPedidoPersonalizado = $this->dao->getData("SELECT id_pedido_personalizado FROM tb_pedido_personalizado 
+                ORDER BY id_pedido_personalizado DESC LIMIT 1");
                 $idPedidoPersonalizado = $idPedidoPersonalizado[0]['id_pedido_personalizado'];
                 return $idPedidoPersonalizado;
             } else {
-                echo "<script language='javascript' type='text/javascript'> window.location.href='../view-cliente/pedir-personalizado.php'</script>";
+                echo "<script language='javascript' type='text/javascript'> 
+                window.location.href='../view-cliente/pedir-personalizado.php'</script>";
             }
         } catch (Exception $e) {
             throw new Exception("Erro ao adicionar pedido personalizado: " . $e->getMessage());
@@ -65,14 +65,31 @@ class ControllerPedidoPersonalizado
     public function viewPedidoPersonalizado($id)
     {
         try {
-            $query = " SELECT tp.id_pedido_personalizado, tp.valor_total, tp.desconto, tp.data_pedido, tp.peso, tp.frete, tp.status, tp.id_endereco_cliente,
-            tp.id_forma_pagamento, tp.id_cobertura, tp.id_decoracao, tp.id_formato, tp.id_massa, tp.id_recheio, tp.id_personalizado AS tp_id_personalizado,
-            tp.id_cliente, tper.id_personalizado AS tper_id_personalizado, tper.nome_personalizado, tper.desc_personalizado, tper.img_personalizado,
-            tper.cobertura_ativa, tper.decoracao_ativa, tper.formato_ativa, tper.massa_ativa, tper.recheio_ativa, tper.personalizado_ativo, tper.limite_entrega,
-            tper.id_tipo_produto, tper.id_confeitaria AS tper_id_confeitaria, tc.id_confeitaria AS tc_id_confeitaria, tc.nome_confeitaria, tc.cnpj_confeitaria,
-            tc.cep_confeitaria, tc.log_confeitaria, tc.num_local, tc.complemento, tc.bairro_confeitaria, tc.cidade_confeitaria, tc.uf_confeitaria, tc.latitude,
-            tc.longitude, tc.img_confeitaria, tc.id_usuario FROM tb_pedido_personalizado tp INNER JOIN tb_personalizado tper ON tp.id_personalizado = tper.id_personalizado
-            INNER JOIN tb_confeitaria tc ON tper.id_confeitaria = tc.id_confeitaria WHERE tp.id_pedido_personalizado = $id;";
+            $query = "SELECT 
+                    tp.id_pedido_personalizado, tp.valor_total, tp.desconto, tp.data_pedido, tp.peso, tp.frete, tp.id_status,
+                    ts.tipo_status, tp.id_endereco_cliente, tp.id_forma_pagamento, tp.id_cobertura, tp.id_decoracao, 
+                    tp.id_formato, tp.id_massa, tp.id_recheio, tp.id_personalizado AS tp_id_personalizado, tp.id_cliente,
+                    
+                    tper.id_personalizado AS tper_id_personalizado, tper.nome_personalizado, tper.desc_personalizado,
+                    tper.img_personalizado, tper.cobertura_ativa, tper.decoracao_ativa, tper.formato_ativa, 
+                    tper.massa_ativa, tper.recheio_ativa, tper.personalizado_ativo, tper.limite_entrega, 
+                    tper.id_tipo_produto, tper.id_confeitaria AS tper_id_confeitaria,
+                    
+                    tc.id_confeitaria AS tc_id_confeitaria, tc.nome_confeitaria, tc.cnpj_confeitaria,
+                    tc.cep_confeitaria, tc.log_confeitaria, tc.num_local, tc.complemento,
+                    tc.bairro_confeitaria, tc.cidade_confeitaria, tc.uf_confeitaria, tc.latitude, 
+                    tc.longitude, tc.img_confeitaria, tc.id_usuario,
+
+                    tf.forma_pagamento,
+                    tec.*
+                
+                FROM tb_pedido_personalizado tp
+                INNER JOIN tb_status ts ON tp.id_status = ts.id_status
+                INNER JOIN tb_personalizado tper ON tp.id_personalizado = tper.id_personalizado
+                INNER JOIN tb_confeitaria tc ON tper.id_confeitaria = tc.id_confeitaria
+                LEFT JOIN tb_forma_pagamento tf ON tp.id_forma_pagamento = tf.id_forma_pagamento
+                LEFT JOIN tb_endereco_cliente tec ON tp.id_endereco_cliente = tec.id_endereco_cliente
+                WHERE tp.id_pedido_personalizado = $id";
 
             $result = $this->dao->getData($query);
             return $result;
@@ -84,11 +101,24 @@ class ControllerPedidoPersonalizado
     public function getPedidosPersonalizadosByCliente($idCliente)
     {
         try {
-            $query = "SELECT pp.*, tper.*, tc.*, tr.*, tf.*, tm.*, td.* FROM tb_pedido_personalizado pp
-            LEFT JOIN tb_personalizado tper ON pp.id_personalizado = tper.id_personalizado LEFT JOIN tb_cobertura tc ON pp.id_cobertura = tc.id_cobertura
-            LEFT JOIN tb_recheio tr ON pp.id_recheio = tr.id_recheio LEFT JOIN tb_formato tf ON pp.id_formato = tf.id_formato
-            LEFT JOIN tb_massa tm ON pp.id_massa = tm.id_massa LEFT JOIN tb_decoracao td ON pp.id_decoracao = td.id_decoracao
-            WHERE pp.id_cliente = $idCliente";
+            $query = "SELECT 
+            pp.*, 
+            tper.*, 
+            tc.*, 
+            tr.*, 
+            tf.*, 
+            tm.*, 
+            td.*, 
+            ts.tipo_status 
+          FROM tb_pedido_personalizado pp
+          LEFT JOIN tb_personalizado tper ON pp.id_personalizado = tper.id_personalizado 
+          LEFT JOIN tb_cobertura tc ON pp.id_cobertura = tc.id_cobertura
+          LEFT JOIN tb_recheio tr ON pp.id_recheio = tr.id_recheio 
+          LEFT JOIN tb_formato tf ON pp.id_formato = tf.id_formato
+          LEFT JOIN tb_massa tm ON pp.id_massa = tm.id_massa 
+          LEFT JOIN tb_decoracao td ON pp.id_decoracao = td.id_decoracao
+          LEFT JOIN tb_status ts ON pp.id_status = ts.id_status
+          WHERE pp.id_cliente = $idCliente";
             $result = $this->dao->getData($query);
             return $result;
         } catch (Exception $e) {
@@ -96,20 +126,13 @@ class ControllerPedidoPersonalizado
         }
     }
 
-    public function getPedidosPersonalizadosByIdPedido($idPedidoPersonalizado)
+    public function status()
     {
         try {
-            $query = "SELECT pp.id_pedido_personalizado, pp.data_pedido, pp.hora_pedido, pp.status, tm.desc_massa, tr.desc_recheio,
-            tc.desc_cobertura, tf.desc_formato, td.desc_decoracao, tper.nome_personalizado, tper.img_personalizado FROM tb_pedido_personalizado pp
-            JOIN tb_massa tm ON pp.id_massa = tm.id_massa JOIN tb_recheio tr ON pp.id_recheio = tr.id_recheio
-            JOIN tb_cobertura tc ON pp.id_cobertura = tc.id_cobertura JOIN tb_formato tf ON pp.id_formato = tf.id_formato
-            JOIN tb_decoracao td ON pp.id_decoracao = td.id_decoracao JOIN tb_personalizado tper ON pp.id_personalizado = tper.id_personalizado
-            WHERE pp.id_pedido_personalizado = $idPedidoPersonalizado";
-
-            $result = $this->dao->getData($query);
+            $result = $this->dao->getData("SELECT * FROM tb_status WHERE tipo_status != 'Cancelado pelo Cliente!'");
             return $result;
         } catch (Exception $e) {
-            throw new Exception("Erro ao buscar pedido personalizado: " . $e->getMessage());
+            echo "Erro ao visualizar status: " . $e->getMessage();
         }
     }
 
@@ -118,10 +141,11 @@ class ControllerPedidoPersonalizado
         try {
             $idConfeitaria = $this->dao->escape_string($_SESSION['idConfeitaria']);
 
-            $query = "SELECT pp.*, tper.*, tc.*, tr.*, tf.*, tm.*, td.*, tcli.* FROM tb_pedido_personalizado pp
+            $query = "SELECT pp.*, tper.*, tc.*, tr.*, tf.*, tm.*, td.*, ts.tipo_status, tcli.* FROM tb_pedido_personalizado pp
             LEFT JOIN tb_personalizado tper ON pp.id_personalizado = tper.id_personalizado LEFT JOIN tb_cobertura tc ON pp.id_cobertura = tc.id_cobertura
             LEFT JOIN tb_recheio tr ON pp.id_recheio = tr.id_recheio LEFT JOIN tb_formato tf ON pp.id_formato = tf.id_formato
             LEFT JOIN tb_massa tm ON pp.id_massa = tm.id_massa LEFT JOIN tb_decoracao td ON pp.id_decoracao = td.id_decoracao
+            LEFT JOIN tb_status ts ON pp.id_status = ts.id_status
             LEFT JOIN tb_cliente tcli ON pp.id_cliente = tcli.id_cliente WHERE tper.id_confeitaria = $idConfeitaria";
 
             $result = $this->dao->getData($query);
@@ -133,45 +157,33 @@ class ControllerPedidoPersonalizado
 
     public function mudarStatusPedidos()
     {
-        if (isset($_POST['alterar_status']) || isset($_POST['cancelar']) && isset($_POST['idPedido'])) {
+        if ((isset($_POST['alterar_status']) || isset($_POST['cancelar'])) && isset($_POST['idPedido'])) {
             $idPedido = $this->dao->escape_string($_POST['idPedido']);
             $novoStatus = $this->dao->escape_string($_POST['novo_status']);
 
             try {
-                // 1. Verificar o status atual do pedido
-                $queryCheck = "SELECT status, id_cliente FROM tb_pedido_personalizado WHERE id_pedido_personalizado = '$idPedido'";
-                $result = $this->dao->getData($queryCheck);
+                if ($novoStatus != 5) {
+                    // 1. Verifica os dados do pedido
+                    $pedido = $this->viewPedidoPersonalizado($idPedido);
 
-                if (empty($result)) {
-                    return false; // Pedido não encontrado
+                    // 2. Checa se está incompleto
+                    if (empty($pedido[0]['id_endereco_cliente']) || empty($pedido[0]['id_forma_pagamento'])) {
+                        return false;
+                    }
                 }
 
-                $pedido = $result[0];
+                // 3. Atualiza o status se os dados estão completos
+                $sql = "UPDATE tb_pedido_personalizado SET id_status = {$novoStatus} WHERE id_pedido_personalizado = {$idPedido}";
+                $stmt = $this->dao->execute($sql);
 
-                // 3. Verificar se já foi cancelado pela confeitaria
-                if ($pedido['status'] === 'Cancelado pela Confeitaria') {
-                    return false;
+                if ($stmt) {
+                    return true;
                 }
-
-                // 4. Verificar se o status atual permite cancelamento
-                $statusPermitidos = []; // Status que permitem cancelamento
-                if (isset($_POST['alterar_status'])) {
-                    $statusPermitidos = ['Pedido Recebido!', 'Em Preparo!', 'Em Rota de Entrega!'];
-                } else {
-                    $statusPermitidos = ['Pedido Recebido!', 'Em Preparo!'];
-                }
-                if (!in_array($pedido['status'], $statusPermitidos)) {
-                    return false;
-                }
-
-                // 5. Atualizar o status
-                $query = "UPDATE tb_pedido_personalizado SET status = '$novoStatus' WHERE id_pedido_personalizado = $idPedido";
-                return $this->dao->execute($query);
-
             } catch (Exception $e) {
                 throw new Exception("Erro ao alterar status pedido: " . $e->getMessage());
             }
         }
+
         return false;
     }
 
@@ -204,10 +216,11 @@ class ControllerPedidoPersonalizado
             $this->pedidoPersonalizado->setFrete($this->dao->escape_string($_POST['frete']));
             $this->pedidoPersonalizado->setIdFormaPagamento($_POST['idForma']);
             $this->pedidoPersonalizado->setIdPedidoPersonalizado($this->dao->escape_string($_POST['id']));
+            $endereco = $this->dao->escape_string($_POST['endereco']);
 
             $query = "UPDATE tb_pedido_personalizado SET valor_total = {$this->pedidoPersonalizado->getValorTotal()}, 
             desconto = {$this->pedidoPersonalizado->getDesconto()}, frete = {$this->pedidoPersonalizado->getFrete()},
-            id_forma_pagamento = {$this->pedidoPersonalizado->getIdFormaPagamento()}, status = 'Pedido em rota de entrega!' 
+            id_endereco_cliente = {$endereco}, id_forma_pagamento = {$this->pedidoPersonalizado->getIdFormaPagamento()}
             WHERE id_pedido_personalizado = {$this->pedidoPersonalizado->getIdPedidoPersonalizado()}";
 
             $result = $this->dao->execute($query);
@@ -220,4 +233,3 @@ class ControllerPedidoPersonalizado
         }
     }
 }
-?>

@@ -43,7 +43,7 @@ if (!isset($_SESSION['idConfeitaria'])) {
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Ola, ' . $_SESSION['nome'];
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
@@ -51,6 +51,7 @@ if (!isset($_SESSION['idConfeitaria'])) {
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
                         <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="meus-contatos.php">Conversas</a></li>
                         <li><a href="editar-confeitaria.php">Meus Dados</a></li>
                         <li><a href="../view/pedir-suporte.php">Suporte</a></li>

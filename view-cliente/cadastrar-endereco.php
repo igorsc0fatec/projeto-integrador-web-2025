@@ -39,7 +39,7 @@ if (isset($_GET['id'])) {
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../assets/css/style-menu.css">
     <link rel="stylesheet" href="../assets/css/style-form-table.css">
-
+    <link rel="stylesheet" href="../assets/css/style-tabela.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -125,13 +125,13 @@ if (isset($_GET['id'])) {
                 </div>
 
                 <input id="latitude" type="hidden" name="latitude">
-                    <input id="longitude" type="hidden" name="longitude">
+                <input id="longitude" type="hidden" name="longitude">
                 <div class="continue-button">
                     <button type="submit" id="submit" name="submit">Cadastrar</button>
                 </div>
             </form>
-            <script src="assets/js/valida-endereco-cliente.js"></script>
-            <script src="assets/js/valida-enviar.js"></script>
+            <script src="js/valida-endereco-cliente.js"></script>
+            <script src="js/valida-enviar.js"></script>
         </div>
     </div>
 
@@ -182,14 +182,14 @@ if (isset($_GET['id'])) {
         <table id="minhaTabela">
             <thead>
                 <tr>
-                    <th>CEP</th>
-                    <th>Logradouro</th>
-                    <th>Nº</th>
-                    <th>Bairro</th>
-                    <th>Cidade</th>
-                    <th>UF</th>
-                    <th>Excluir</th>
-                    <th>Editar</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">CEP</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Logradouro</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Nº</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Bairro</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Cidade</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">UF</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Excluir</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Editar</th>
                 </tr>
             </thead>
             <tbody id="enderecos">
@@ -198,18 +198,18 @@ if (isset($_GET['id'])) {
     </div>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             function loadData() {
                 $.ajax({
                     url: 'cadastrar-endereco.php?action=fetch_data',
                     type: 'GET',
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         var tableBody = $('#enderecos');
                         if (data.length === 0) {
                             tableBody.append('<tr><td colspan="3">Você não tem nenhum endereço no momento</td></tr>');
                         } else {
-                            data.forEach(function (endereco) {
+                            data.forEach(function(endereco) {
                                 var row = $('<tr></tr>');
                                 row.append('<td>' + endereco.cep_cliente + '</td>');
                                 row.append('<td>' + endereco.log_cliente + '</td>');
@@ -224,7 +224,7 @@ if (isset($_GET['id'])) {
                             });
                         }
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log('Erro: ' + textStatus + ' - ' + errorThrown);
                     }
                 });
@@ -245,8 +245,10 @@ if (isset($_GET['id'])) {
                     $.ajax({
                         url: 'cadastrar-endereco.php?id=' + idEnderecoCliente,
                         type: 'POST',
-                        data: { idEnderecoCliente: idEnderecoCliente },
-                        success: function (response) {
+                        data: {
+                            idEnderecoCliente: idEnderecoCliente
+                        },
+                        success: function(response) {
                             Swal.fire(
                                 'Excluído!',
                                 'O endereço foi excluído.',
@@ -255,7 +257,7 @@ if (isset($_GET['id'])) {
                                 window.location.href = 'cadastrar-endereco.php';
                             });
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
+                        error: function(jqXHR, textStatus, errorThrown) {
                             Swal.fire(
                                 'Erro!',
                                 'Ocorreu um erro ao excluir o endereco.',

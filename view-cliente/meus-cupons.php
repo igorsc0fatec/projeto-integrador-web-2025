@@ -42,9 +42,7 @@ if (isset($_SESSION['carrinho'])) {
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Olá, ' . $_SESSION['nome'];
-                        } else {
-                            echo "Olá, Visitante";
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
@@ -58,11 +56,11 @@ if (isset($_SESSION['carrinho'])) {
                                 <?php endif; ?>
                             </a>
                         </li>
-                        <li><a href="../view-cliente/meus-pedidos.php">Pedidos</a></li>
-                        <li><a href="../view-cliente/meus-cupons.php">Cupons</a></li>
-                        <li><a href="#">Conversas</a></li>
-                        <li><a href="../view-cliente/editar-cliente.php">Meus Dados</a></li>
-                        <li><a href="pedir-suporte.php">Suporte</a></li>
+                        <li><a href="meus-pedidos.php">Pedidos</a></li>
+                        <li><a href="meus-cupons.php">Cupons</a></li>
+                        <li><a href="meus-contatos.php">Conversas</a></li>
+                        <li><a href="editar-cliente.php">Meus Dados</a></li>
+                        <li><a href="../view/pedir-suporte.php">Suporte</a></li>
                         <li>
                             <form action="../view/logout.php" method="POST">
                                 <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
@@ -112,9 +110,9 @@ if (isset($_SESSION['carrinho'])) {
     </div>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Efeito de raspadinha
-            $('.scratch-card').each(function () {
+            $('.scratch-card').each(function() {
                 let isDrawing = false;
                 let lastPoint = null;
                 const overlay = $(this).find('.scratch-overlay');
@@ -147,13 +145,13 @@ if (isset($_SESSION['carrinho'])) {
                 $(window).resize(resizeCanvas.bind(this));
 
                 // Eventos para raspadinha
-                $(canvas).on('mousedown touchstart', function (e) {
+                $(canvas).on('mousedown touchstart', function(e) {
                     isDrawing = true;
                     lastPoint = getPosition(e, canvas);
                     e.preventDefault();
                 });
 
-                $(document).on('mousemove touchmove', function (e) {
+                $(document).on('mousemove touchmove', function(e) {
                     if (!isDrawing) return;
 
                     const currentPoint = getPosition(e, canvas);
@@ -172,7 +170,7 @@ if (isset($_SESSION['carrinho'])) {
                     checkIfRevealed(canvas, overlay);
                 });
 
-                $(document).on('mouseup touchend', function () {
+                $(document).on('mouseup touchend', function() {
                     isDrawing = false;
                     lastPoint = null;
                 });
@@ -205,7 +203,7 @@ if (isset($_SESSION['carrinho'])) {
             });
 
             // Botão de revelar (alternativa à raspadinha)
-            $('.reveal-btn').click(function () {
+            $('.reveal-btn').click(function() {
                 const scratchCard = $(this).siblings('.scratch-card');
                 scratchCard.find('.scratch-overlay').fadeOut(500);
                 scratchCard.find('.scratch-canvas').remove();

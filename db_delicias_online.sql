@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 02/06/2025 às 03:01
+-- Tempo de geração: 15/06/2025 às 03:24
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -126,7 +126,14 @@ INSERT INTO `tb_codigo` (`id_codigo`, `codigo`, `data_criacao`, `status`, `id_us
 (6, '734810', '2025-06-01 21:16:12', 1, 6),
 (7, '769204', '2025-06-01 21:18:32', 1, 7),
 (8, '521920', '2025-06-01 21:25:00', 1, 8),
-(9, '751361', '2025-06-01 21:26:54', 1, 9);
+(31, '445813', '2025-06-10 21:02:47', 1, 2),
+(32, '721209', '2025-06-10 21:06:59', 1, 2),
+(33, '436504', '2025-06-10 21:08:04', 1, 2),
+(34, '913489', '2025-06-10 21:20:04', 1, 2),
+(35, '504531', '2025-06-10 21:22:21', 1, 2),
+(36, '395739', '2025-06-10 22:19:19', 1, 1),
+(37, '629763', '2025-06-13 12:01:46', 1, 2),
+(38, '784009', '2025-06-14 20:57:54', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -180,6 +187,15 @@ CREATE TABLE `tb_conversa` (
   `id_destinatario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `tb_conversa`
+--
+
+INSERT INTO `tb_conversa` (`id_conversa`, `data_criacao`, `id_remetente`, `id_destinatario`) VALUES
+(1, '2025-06-11 00:20:58', 1, 6),
+(2, '2025-06-13 12:06:24', 1, 3),
+(3, '2025-06-13 12:07:26', 1, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -191,6 +207,15 @@ CREATE TABLE `tb_conversa_mensagem` (
   `id_mensagem` int(11) DEFAULT NULL,
   `id_conversa` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_conversa_mensagem`
+--
+
+INSERT INTO `tb_conversa_mensagem` (`id_conversa_mensagem`, `id_mensagem`, `id_conversa`) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -215,8 +240,8 @@ CREATE TABLE `tb_cupom` (
 --
 
 INSERT INTO `tb_cupom` (`id_cupom`, `titulo_cupom`, `mensagem`, `desc_cupom`, `porcen_desconto`, `data_criacao`, `data_validade`, `cupom_usado`, `id_usuario`) VALUES
-(1, '', '', '', 5.00, '2025-06-01 23:31:23', '2025-06-08 20:31:23', 0, 1),
-(2, 'Cupom de Aniversário', 'Parabéns! Aproveite seu desconto especial de aniversário.', 'Aniversario5', 5.00, '2025-06-02 00:59:50', '2025-06-08 20:31:23', 0, 1);
+(2, 'Cupom de Aniversário', 'Parabéns! Aproveite seu desconto especial de aniversário.', 'Aniversario5', 5.00, '2025-06-02 00:59:50', '2025-06-08 20:31:23', 0, 1),
+(3, '', '', '', 5.00, '2025-06-10 02:00:31', '2025-06-16 23:00:31', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -459,7 +484,10 @@ CREATE TABLE `tb_itens_pedido` (
 
 INSERT INTO `tb_itens_pedido` (`id_itens_pedido`, `quantidade`, `id_produto`, `id_pedido`, `id_cupom`) VALUES
 (1, 1, 4, 1, NULL),
-(2, 1, 6, 1, NULL);
+(2, 1, 6, 1, NULL),
+(3, 1, 10, 2, NULL),
+(4, 3, 11, 2, NULL),
+(5, 2, 1, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -519,6 +547,15 @@ CREATE TABLE `tb_mensagem` (
   `id_destinatario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `tb_mensagem`
+--
+
+INSERT INTO `tb_mensagem` (`id_mensagem`, `desc_mensagem`, `hora_envio`, `status_mensagem`, `id_remetente`, `id_destinatario`) VALUES
+(1, 'Olá, Gostaria de saber como está o andamento do meu pedido Nº 2', '2025-06-11 00:20:58', 'nao_lido', 1, 6),
+(2, 'Olá, Gostaria de saber como está o andamento do meu pedido Nº 3', '2025-06-13 12:06:24', 'nao_lido', 1, 3),
+(3, 'Olá, Gostaria de saber como está o andamento do meu pedido Nº 4', '2025-06-13 12:07:26', 'nao_lido', 1, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -530,19 +567,21 @@ CREATE TABLE `tb_pedido` (
   `valor_total` decimal(10,2) DEFAULT NULL,
   `desconto` decimal(5,2) DEFAULT NULL,
   `data_pedido` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(255) DEFAULT NULL,
   `frete` decimal(10,2) DEFAULT 0.00,
   `id_endereco_cliente` int(11) DEFAULT NULL,
   `id_forma_pagamento` int(11) DEFAULT NULL,
-  `id_cliente` int(11) DEFAULT NULL
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_status` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `tb_pedido`
 --
 
-INSERT INTO `tb_pedido` (`id_pedido`, `valor_total`, `desconto`, `data_pedido`, `status`, `frete`, `id_endereco_cliente`, `id_forma_pagamento`, `id_cliente`) VALUES
-(1, 117.00, 0.00, '2025-06-01 23:56:13', 'Cancelado pelo Cliente', 5.00, 1, 1, 1);
+INSERT INTO `tb_pedido` (`id_pedido`, `valor_total`, `desconto`, `data_pedido`, `frete`, `id_endereco_cliente`, `id_forma_pagamento`, `id_cliente`, `id_status`) VALUES
+(1, 117.00, 0.00, '2025-06-01 23:56:13', 5.00, 1, 1, 1, 1),
+(2, 310.00, 0.00, '2025-06-10 23:40:03', 5.00, 1, 1, 1, 1),
+(3, 157.00, 0.00, '2025-06-14 21:13:50', 7.00, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -557,7 +596,6 @@ CREATE TABLE `tb_pedido_personalizado` (
   `data_pedido` timestamp NOT NULL DEFAULT current_timestamp(),
   `peso` decimal(6,3) DEFAULT NULL,
   `frete` decimal(10,2) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
   `id_endereco_cliente` int(11) DEFAULT NULL,
   `id_forma_pagamento` int(11) DEFAULT NULL,
   `id_cobertura` int(11) DEFAULT NULL,
@@ -566,15 +604,19 @@ CREATE TABLE `tb_pedido_personalizado` (
   `id_massa` int(11) DEFAULT NULL,
   `id_recheio` int(11) DEFAULT NULL,
   `id_personalizado` int(11) DEFAULT NULL,
-  `id_cliente` int(11) DEFAULT NULL
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_status` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `tb_pedido_personalizado`
 --
 
-INSERT INTO `tb_pedido_personalizado` (`id_pedido_personalizado`, `valor_total`, `desconto`, `data_pedido`, `peso`, `frete`, `status`, `id_endereco_cliente`, `id_forma_pagamento`, `id_cobertura`, `id_decoracao`, `id_formato`, `id_massa`, `id_recheio`, `id_personalizado`, `id_cliente`) VALUES
-(1, 180.00, 0.00, '2025-06-01 23:57:08', 0.750, 0.00, 'Entregue!', NULL, NULL, 7, 7, 7, 7, 7, 7, 1);
+INSERT INTO `tb_pedido_personalizado` (`id_pedido_personalizado`, `valor_total`, `desconto`, `data_pedido`, `peso`, `frete`, `id_endereco_cliente`, `id_forma_pagamento`, `id_cobertura`, `id_decoracao`, `id_formato`, `id_massa`, `id_recheio`, `id_personalizado`, `id_cliente`, `id_status`) VALUES
+(1, 180.00, 0.00, '2025-06-01 23:57:08', 0.750, 0.00, NULL, NULL, 7, 7, 7, 7, 7, 7, 1, 1),
+(2, 120.00, 0.00, '2025-06-11 00:20:53', 0.500, 0.00, NULL, NULL, 10, 10, 10, 10, 11, 10, 1, 1),
+(3, 149.50, 0.00, '2025-06-13 12:06:12', 0.650, 0.00, NULL, NULL, 3, 2, 2, 1, 2, 1, 1, 1),
+(4, 50.00, 0.00, '2025-06-13 12:07:21', 0.200, 0.00, NULL, NULL, 23, 24, 24, 22, 23, 24, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -649,7 +691,7 @@ CREATE TABLE `tb_produto` (
 --
 
 INSERT INTO `tb_produto` (`id_produto`, `nome_produto`, `desc_produto`, `valor_produto`, `frete`, `produto_ativo`, `limite_entrega`, `img_produto`, `id_tipo_produto`, `id_confeitaria`) VALUES
-(1, 'Bolo de Chocolate', 'bolo de chocolate com cobertura de brigadeiro', 75.00, 7.00, 1, 35, 'img/img-produto/Captura de tela 2025-06-01 190141.png', 2, 1),
+(1, 'Bolo de Chocolate', 'bolo de chocolate com cobertura de brigadeiro', 75.00, 7.00, 1, 30, 'img/img-produto/Captura de tela 2025-06-01 190141.png', 2, 1),
 (2, 'Cupcake de Baunilha', 'cupcake de baunilha', 25.00, 5.00, 1, 30, 'img/img-produto/Captura de tela 2025-06-01 190327.png', 4, 1),
 (3, 'Torta de Bolacha', 'torta de chocolate com recheio de bolacha', 60.00, 5.00, 1, 15, 'img/img-produto/Captura de tela 2025-06-01 190450.png', 3, 1),
 (4, 'Bolo de Morango', 'Delicioso bolo de morango', 80.00, 7.00, 1, 20, 'img/img-produto/bolo_morango.png', 5, 2),
@@ -670,8 +712,8 @@ INSERT INTO `tb_produto` (`id_produto`, `nome_produto`, `desc_produto`, `valor_p
 (22, 'Pão de Mel Recheado', 'Pão de mel com recheio de doce de leite', 50.00, 5.00, 1, 20, 'img/img-produto/pao_mel.png', 23, 6),
 (23, 'Brownie de Chocolate', 'Brownie macio de chocolate', 60.00, 5.00, 1, 20, 'img/img-produto/brownie.png', 24, 6),
 (24, 'Cookie de Baunilha', 'Cookie crocante com gotas de chocolate', 40.00, 5.00, 1, 20, 'img/img-produto/cookie.png', 25, 6),
-(25, 'Pão de Mel Recheado', 'Pão de mel com recheio de doce de leite', 50.00, 5.00, 1, 20, 'img/img-produto/pao_mel.png', 26, 1),
-(26, 'Brownie de Chocolate', 'Brownie macio de chocolate', 60.00, 5.00, 1, 20, 'img/img-produto/brownie.png', 27, 1),
+(25, 'Pão de Mel Recheado', 'Pão de mel com recheio de doce de leite', 50.00, 5.00, 1, 20, 'img/img-produto/Captura de tela 2025-06-01 190450.png', 26, 1),
+(26, 'Brownie de Chocolate', 'Brownie macio de chocolate', 60.00, 5.00, 1, 20, 'img/img-produto/Captura de tela 2025-06-01 190450.png', 27, 1),
 (27, 'Cookie de Baunilha', 'Cookie crocante com gotas de chocolate', 40.00, 5.00, 1, 20, 'img/img-produto/cookie.png', 28, 1);
 
 -- --------------------------------------------------------
@@ -716,6 +758,29 @@ INSERT INTO `tb_recheio` (`id_recheio`, `desc_recheio`, `valor_por_peso`, `id_co
 (22, 'Recheio de Brigadeiro', 6.00, 1),
 (23, 'Recheio de Doce de Leite', 6.00, 1),
 (24, 'Recheio de Creme', 6.00, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_status`
+--
+
+CREATE TABLE `tb_status` (
+  `id_status` int(11) NOT NULL,
+  `tipo_status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_status`
+--
+
+INSERT INTO `tb_status` (`id_status`, `tipo_status`) VALUES
+(1, 'Pedido Recebido!'),
+(2, 'Em Preparo!'),
+(3, 'Em Rota de Entrega!'),
+(4, 'Entregue!'),
+(5, 'Cancelado pelo Cliente!'),
+(6, 'Cancelado pela Confeitaria!');
 
 -- --------------------------------------------------------
 
@@ -907,15 +972,16 @@ CREATE TABLE `tb_usuario` (
 --
 
 INSERT INTO `tb_usuario` (`id_usuario`, `email_usuario`, `email_verificado`, `conta_ativa`, `senha_usuario`, `online`, `data_criacao`, `id_tipo_usuario`) VALUES
-(1, 'emulador.igor2@gmail.com', 1, 1, '$2y$10$eMl4KkChyoXHRl6Er2L3euenbCZU28qsOTtIUo8ujhZPjwZ5donoS', '2025-06-01 23:31:22', '2025-05-31 22:34:22', 2),
-(2, 'igor.cardoso4@fatec.sp.gov.br', 1, 1, '$2y$10$obAsbd9vUA8VQJg3462TWuXeXG2Og8T9giscsk0NoaXnNdrZ/bYK6', '2025-06-01 22:13:33', '2025-05-31 22:43:34', 3),
-(3, 'confeitaria.2@teste.com', 1, 1, '$2y$10$Ox0jBS5eGdGF89G7Yn2S9.2n5yKOZ2H.ch/CrTeDDwDUgOQ8rkv/C', '2025-06-01 21:09:21', '2025-06-01 21:09:02', 3),
+(1, 'emulador.igor2@gmail.com', 1, 1, '$2y$10$euZX0X58nGO1LFRZ1Cmdr.46ThK8zEZhE3LM47Vg4blPwwoCtB4ou', '2025-06-15 01:19:02', '2025-05-31 22:34:22', 2),
+(2, 'igor.cardoso4@fatec.sp.gov.br', 1, 1, '$2y$10$8DjLx/IzH1txGiDhsMaltejAy8BifJjQTLk.VdHj6b0UHanKULexm', '2025-06-14 23:31:08', '2025-05-31 22:43:34', 3),
+(3, 'confeitaria.2@teste.com', 1, 1, '$2y$10$Ox0jBS5eGdGF89G7Yn2S9.2n5yKOZ2H.ch/CrTeDDwDUgOQ8rkv/C', '2025-06-10 20:50:49', '2025-06-01 21:09:02', 3),
 (4, 'confeitaria.3@teste.com', 1, 1, '$2y$10$QEc40uYVsXVrBurfntb/vOEXKaKlQc.vscjS9VX7ECWFVQLBB5zPq', '2025-06-01 21:11:34', '2025-06-01 21:11:16', 3),
-(5, 'confeitaria.4@teste.com', 1, 1, '$2y$10$U09A9LYmJN6HkaZjNBOezewmpgy2.uYbazNMTSSSqmr6nZiru6Iye', '2025-06-01 23:57:46', '2025-06-01 21:13:31', 3),
-(6, 'confeitaria.5@teste.com', 1, 1, '$2y$10$fChyxOX/wV5Y8wsYRb/6PuZjwzBAf80zEFUacpHon5bY69KWSwtG6', '2025-06-01 21:16:26', '2025-06-01 21:16:12', 3),
+(5, 'confeitaria.4@teste.com', 1, 1, '$2y$10$U09A9LYmJN6HkaZjNBOezewmpgy2.uYbazNMTSSSqmr6nZiru6Iye', '2025-06-02 01:06:40', '2025-06-01 21:13:31', 3),
+(6, 'confeitaria.5@teste.com', 1, 1, '$2y$10$fChyxOX/wV5Y8wsYRb/6PuZjwzBAf80zEFUacpHon5bY69KWSwtG6', '2025-06-11 00:56:47', '2025-06-01 21:16:12', 3),
 (7, 'confeitaria.6@teste.com', 1, 1, '$2y$10$gu47muf31GmWoNDNPsTOr.COwUOXZ5FQPGW4ozW7ykA6YRmLoZfYi', '2025-06-01 21:18:49', '2025-06-01 21:18:32', 3),
 (8, 'confeitaria.7@teste.com', 1, 1, '$2y$10$iCXRIo8cjd5RviG8ZSMHzed2BULerCwPi.5aoAGdIWyug1//sQAF6', '2025-06-01 21:25:14', '2025-06-01 21:25:00', 3),
-(9, 'confeitaria.8@teste.com', 1, 1, '$2y$10$/MCxfqPTEyFKGh0U5URP6.kdCFL9iyPDCEoCz1dyIShyth4tetK1e', '2025-06-01 21:27:09', '2025-06-01 21:26:54', 3);
+(9, 'confeitaria.8@teste.com', 1, 1, '$2y$10$/MCxfqPTEyFKGh0U5URP6.kdCFL9iyPDCEoCz1dyIShyth4tetK1e', '2025-06-01 21:27:09', '2025-06-01 21:26:54', 3),
+(10, 'adm@adm.com', 1, 1, '$2y$10$lWyWqk64CP4cfdPOk/M5be2Lesg5ft8c1cVSOmQZ00WeIm5BY5lcu', '2025-06-02 01:11:01', '2025-06-02 01:06:33', 1);
 
 --
 -- Índices para tabelas despejadas
@@ -1043,7 +1109,8 @@ ALTER TABLE `tb_pedido`
   ADD PRIMARY KEY (`id_pedido`),
   ADD KEY `id_endereco_cliente` (`id_endereco_cliente`),
   ADD KEY `id_forma_pagamento` (`id_forma_pagamento`),
-  ADD KEY `id_cliente` (`id_cliente`);
+  ADD KEY `id_cliente` (`id_cliente`),
+  ADD KEY `fk_id_status` (`id_status`);
 
 --
 -- Índices de tabela `tb_pedido_personalizado`
@@ -1058,7 +1125,8 @@ ALTER TABLE `tb_pedido_personalizado`
   ADD KEY `id_massa` (`id_massa`),
   ADD KEY `id_recheio` (`id_recheio`),
   ADD KEY `id_personalizado` (`id_personalizado`),
-  ADD KEY `id_cliente` (`id_cliente`);
+  ADD KEY `id_cliente` (`id_cliente`),
+  ADD KEY `fk_pedido_status` (`id_status`);
 
 --
 -- Índices de tabela `tb_personalizado`
@@ -1082,6 +1150,12 @@ ALTER TABLE `tb_produto`
 ALTER TABLE `tb_recheio`
   ADD PRIMARY KEY (`id_recheio`),
   ADD KEY `id_confeitaria` (`id_confeitaria`);
+
+--
+-- Índices de tabela `tb_status`
+--
+ALTER TABLE `tb_status`
+  ADD PRIMARY KEY (`id_status`);
 
 --
 -- Índices de tabela `tb_suporte`
@@ -1147,7 +1221,7 @@ ALTER TABLE `tb_adm`
 -- AUTO_INCREMENT de tabela `tb_cliente`
 --
 ALTER TABLE `tb_cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `tb_cobertura`
@@ -1159,31 +1233,31 @@ ALTER TABLE `tb_cobertura`
 -- AUTO_INCREMENT de tabela `tb_codigo`
 --
 ALTER TABLE `tb_codigo`
-  MODIFY `id_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de tabela `tb_confeitaria`
 --
 ALTER TABLE `tb_confeitaria`
-  MODIFY `id_confeitaria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_confeitaria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `tb_conversa`
 --
 ALTER TABLE `tb_conversa`
-  MODIFY `id_conversa` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_conversa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `tb_conversa_mensagem`
 --
 ALTER TABLE `tb_conversa_mensagem`
-  MODIFY `id_conversa_mensagem` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_conversa_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `tb_cupom`
 --
 ALTER TABLE `tb_cupom`
-  MODIFY `id_cupom` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_cupom` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `tb_ddd`
@@ -1201,7 +1275,7 @@ ALTER TABLE `tb_decoracao`
 -- AUTO_INCREMENT de tabela `tb_endereco_cliente`
 --
 ALTER TABLE `tb_endereco_cliente`
-  MODIFY `id_endereco_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_endereco_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `tb_formato`
@@ -1219,7 +1293,7 @@ ALTER TABLE `tb_forma_pagamento`
 -- AUTO_INCREMENT de tabela `tb_itens_pedido`
 --
 ALTER TABLE `tb_itens_pedido`
-  MODIFY `id_itens_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_itens_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `tb_massa`
@@ -1231,19 +1305,19 @@ ALTER TABLE `tb_massa`
 -- AUTO_INCREMENT de tabela `tb_mensagem`
 --
 ALTER TABLE `tb_mensagem`
-  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `tb_pedido`
 --
 ALTER TABLE `tb_pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `tb_pedido_personalizado`
 --
 ALTER TABLE `tb_pedido_personalizado`
-  MODIFY `id_pedido_personalizado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pedido_personalizado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `tb_personalizado`
@@ -1262,6 +1336,12 @@ ALTER TABLE `tb_produto`
 --
 ALTER TABLE `tb_recheio`
   MODIFY `id_recheio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT de tabela `tb_status`
+--
+ALTER TABLE `tb_status`
+  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `tb_suporte`
@@ -1303,7 +1383,7 @@ ALTER TABLE `tb_tipo_usuario`
 -- AUTO_INCREMENT de tabela `tb_usuario`
 --
 ALTER TABLE `tb_usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restrições para tabelas despejadas
@@ -1402,6 +1482,7 @@ ALTER TABLE `tb_mensagem`
 -- Restrições para tabelas `tb_pedido`
 --
 ALTER TABLE `tb_pedido`
+  ADD CONSTRAINT `fk_id_status` FOREIGN KEY (`id_status`) REFERENCES `tb_status` (`id_status`),
   ADD CONSTRAINT `tb_pedido_ibfk_1` FOREIGN KEY (`id_endereco_cliente`) REFERENCES `tb_endereco_cliente` (`id_endereco_cliente`),
   ADD CONSTRAINT `tb_pedido_ibfk_2` FOREIGN KEY (`id_forma_pagamento`) REFERENCES `tb_forma_pagamento` (`id_forma_pagamento`),
   ADD CONSTRAINT `tb_pedido_ibfk_3` FOREIGN KEY (`id_cliente`) REFERENCES `tb_cliente` (`id_cliente`);
@@ -1410,6 +1491,7 @@ ALTER TABLE `tb_pedido`
 -- Restrições para tabelas `tb_pedido_personalizado`
 --
 ALTER TABLE `tb_pedido_personalizado`
+  ADD CONSTRAINT `fk_pedido_status` FOREIGN KEY (`id_status`) REFERENCES `tb_status` (`id_status`),
   ADD CONSTRAINT `tb_pedido_personalizado_ibfk_1` FOREIGN KEY (`id_endereco_cliente`) REFERENCES `tb_endereco_cliente` (`id_endereco_cliente`),
   ADD CONSTRAINT `tb_pedido_personalizado_ibfk_2` FOREIGN KEY (`id_forma_pagamento`) REFERENCES `tb_forma_pagamento` (`id_forma_pagamento`),
   ADD CONSTRAINT `tb_pedido_personalizado_ibfk_3` FOREIGN KEY (`id_cobertura`) REFERENCES `tb_cobertura` (`id_cobertura`),

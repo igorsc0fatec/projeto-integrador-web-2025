@@ -41,14 +41,24 @@ $tipoProdutoController = new ControllerTipoProduto();
         <header>
             <nav>
                 <div class="nav-container">
-                    <a href="dashboard-confeitaria.php">
-                        <img id="logo" src="assets/img/logo.png" alt="JobFinder">
+                    <a href="dashboard.php">
+                        <img id="logo" src="../assets/img-site/logo.png" alt="JobFinder">
                     </a>
+                    <div class="greeting">
+                        <?php
+                        if (isset($_SESSION['nome'])) {
+                            echo $_SESSION['nome'];
+                        }
+                        ?>
+                    </div>
+
                     <i class="fas fa-bars btn-menumobile"></i>
-                    <ul>
-                        <li><a href="cadastrar-produto.php">Produtos</a></li>
-                        <li><a href="addProdPersonalizado.php">Personalizados</a></li>
-                        <li><a href="regras-confeitaria.php">Regras</a></li>
+                    <ul class="nav-links">
+                        <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
+                        <li><a href="meus-contatos.php">Conversas</a></li>
+                        <li><a href="editar-confeitaria.php">Meus Dados</a></li>
+                        <li><a href="../view/pedir-suporte.php">Suporte</a></li>
                         <li><a href="cadastrar-tipos-produtos.php">Voltar </a></li>
                     </ul>
                 </div>

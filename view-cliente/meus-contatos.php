@@ -41,12 +41,9 @@ if (isset($_SESSION['carrinho'])) {
                             <?php
                             if (isset($_SESSION['nome'])) {
                                 echo $_SESSION['nome'];
-                            } else {
-                                echo "Ola, Visitante";
                             }
                             ?>
                         </div>
-
                         <i class="fas fa-bars btn-menumobile"></i>
                         <ul class="nav-links">
                             <li style="position: relative;">
@@ -61,7 +58,7 @@ if (isset($_SESSION['carrinho'])) {
                             <li><a href="meus-cupons.php">Cupons</a></li>
                             <li><a href="meus-contatos.php">Conversas</a></li>
                             <li><a href="editar-cliente.php">Meus Dados</a></li>
-                            <li><a href="pedir-suporte.php">Suporte</a></li>
+                            <li><a href="../view/pedir-suporte.php">Suporte</a></li>
                             <li>
                                 <form action="../view/logout.php" method="POST">
                                     <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
@@ -85,14 +82,14 @@ if (isset($_SESSION['carrinho'])) {
         <?php
         if (!empty($conversasAtivas)) {
             foreach ($conversasAtivas as $conversa) {
-                ?>
+        ?>
                 <div class="contact">
                     <img src="../view-confeitaria/<?php echo $conversa['img_confeitaria']; ?>" alt="Foto de Perfil">
                     <a href="chat-cliente.php?u=<?php echo $conversa['id_usuario']; ?>&c=<?php echo $conversa['id_confeitaria']; ?>">
                         <?php echo htmlspecialchars($conversa['nome_confeitaria']); ?>
                     </a>
                 </div>
-                <?php
+        <?php
             }
         } else {
             echo "<p>Nenhuma conversa encontrada.</p>";

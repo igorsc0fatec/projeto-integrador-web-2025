@@ -273,7 +273,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'validar_codigo') {
                     }
                 });
             }
-    
             // Inicia a verificação do código
             verificarCodigoConfeitaria();
         </script>";
@@ -305,9 +304,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'validar_codigo') {
         } else {
             if ($usuarioController->addUsuario()) {
                 if ($confeitariaController->addConfeitaria()) {
-                    $codigo = $usuarioController->gerarCodigo();
-                    $usuarioController->enviaEmail($_POST['emailUsuario'], $codigo);
                     $idUsuario = $usuarioController->buscarUltimoUsuario();
+                    $codigo = $usuarioController->gerarCodigo($idUsuario);
+                    $usuarioController->enviaEmail($_POST['emailUsuario'], $codigo);
                     echo gerarScriptConfeitaria($_POST['emailUsuario'], $idUsuario);
                 }
             }

@@ -1,0 +1,433 @@
+/* Estilos para a seção de produtos */
+div > h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Estilos para o formulário de pesquisa */
+.pesquisa {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+}
+
+.pesquisa label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.input-wrapper {
+    display: flex;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.input-wrapper input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #ff6b6b;
+}
+
+.input-wrapper button {
+    padding: 12px 20px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.input-wrapper button:hover {
+    background-color: #ff5252;
+}
+
+/* Estilos para a tabela */
+.tabela-scroll {
+    max-width: 95%;
+    margin: 0 auto;
+    overflow-x: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: white;
+}
+
+#minhaTabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#minhaTabela thead {
+    background-color: #2196f3; /* azul */
+    color: white;
+}
+
+
+#minhaTabela th {
+    padding: 15px 10px;
+    text-align: center;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+#minhaTabela tbody tr {
+    border-bottom: 1px solid #000000;
+    transition: all 0.2s;
+}
+
+#minhaTabela tbody tr:hover {
+    background-color: #fff9f9;
+}
+
+#minhaTabela td {
+    padding: 12px 10px;
+    text-align: center;
+    vertical-align: middle;
+    color: #000000;
+}
+
+#minhaTabela td img {
+    border-radius: 4px;
+    object-fit: cover;
+    height: 50px;
+    width: 50px;
+}
+
+#minhaTabela button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s;
+}
+
+#minhaTabela button:hover {
+    background-color: #3e8e41;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Status dos produtos */
+#minhaTabela td:nth-child(6) {
+    font-weight: 600;
+}
+
+#minhaTabela td:nth-child(6):contains("Ativado") {
+    color: #4CAF50;
+}
+
+#minhaTabela td:nth-child(6):contains("Desativado") {
+    color: #f44336;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .tabela-scroll {
+        max-width: 100%;
+        border-radius: 0;
+    }
+    
+    #minhaTabela {
+        font-size: 0.8rem;
+    }
+    
+    #minhaTabela th, 
+    #minhaTabela td {
+        padding: 10px 5px;
+    }
+    
+    #minhaTabela button {
+        padding: 6px 10px;
+    }
+}
+/* Estilos para o formulário de pesquisa - Versão Melhorada */
+.pesquisa {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+
+.pesquisa label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #5d4037;
+    font-size: 1.1rem;
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+}
+
+.input-wrapper {
+    display: flex;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    position: relative;
+}
+
+.input-wrapper:focus-within {
+    box-shadow: 0 6px 25px rgba(255, 138, 101, 0.3);
+    border-color: #ff8a65;
+}
+
+.input-wrapper input {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    font-size: 1rem;
+    transition: all 0.3s;
+    background: transparent;
+    color: #5d4037; /* Cor do texto visível */
+    font-weight: 500;
+    width: 100%; /* Garante que o input ocupe todo o espaço */
+    opacity: 1; /* Garante que o texto seja totalmente visível */
+    -webkit-text-fill-color: #5d4037; /* Para navegadores WebKit */
+}
+
+/* Adicione também este estilo para o placeholder */
+.input-wrapper input::placeholder {
+    color: #a1887f;
+    font-weight: 400;
+    opacity: 1; /* Garante que o placeholder seja visível */
+    -webkit-text-fill-color: #a1887f; /* Para navegadores WebKit */
+}
+
+.input-wrapper input:focus {
+    outline: none;
+}
+
+.input-wrapper button {
+    padding: 0 25px;
+    background: linear-gradient(135deg, #ff8a65, #ff7043);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 120px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.input-wrapper button:hover {
+    background: linear-gradient(135deg, #ff7043, #ff5722);
+    transform: none;
+}
+
+.input-wrapper button i {
+    font-size: 1.1rem;
+}
+
+.input-wrapper button span {
+    display: inline-block;
+}
+
+/* Efeito de onda ao clicar */
+.input-wrapper button:active {
+    transform: scale(0.98);
+}
+
+/* Animação suave para o container */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pesquisa {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .pesquisa {
+        max-width: 90%;
+        margin-bottom: 30px;
+    }
+    
+    .input-wrapper {
+        flex-direction: column;
+        border-radius: 25px;
+    }
+    
+    .input-wrapper input {
+        padding: 12px 20px;
+        width: 100%;
+        border-radius: 25px 25px 0 0;
+    }
+    
+    .input-wrapper button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 0 0 25px 25px;
+        min-width: auto;
+    }
+    
+    .pesquisa label {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-wrapper input {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .input-wrapper button {
+        font-size: 0.8rem;
+        padding: 10px;
+    }
+    
+    .pesquisa label {
+        font-size: 0.9rem;
+    }
+}
+
+/* Seção de pesquisa compacta */
+.search-section {
+    text-align: auto;
+    margin: 30px auto;
+    max-width: 1000px;
+    padding: 0 20px;
+}
+
+.search-section h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    color: #5d4037;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.search-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.search-box {
+    display: flex;
+    height: 40px;
+    width: 3000px; /* <-- Aumente esse valor conforme necessário */
+    box-shadow: 0 4px 15px rgba(255, 138, 101, 0.2);
+    border-radius: 30px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 138, 101, 0.3);
+    background: #fff;
+}
+
+
+.search-box:hover {
+    box-shadow: 0 6px 20px rgba(255, 138, 101, 0.3);
+}
+
+.search-box input {
+    flex: 1;
+    padding: 0 25px;
+    border: none;
+    font-size: 1rem;
+    color: #5d4037;
+    outline: none;
+    background: transparent;
+}
+
+.search-box input::placeholder {
+    color: #bcaaa4;
+    font-weight: 400;
+}
+
+.search-button {
+    width: 50px;
+    background: linear-gradient(135deg, #ff8a65, #ff7043);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.search-button:hover {
+    background: linear-gradient(135deg, #ff7043, #ff5722);
+    width: 55px;
+}
+
+.search-button i {
+    font-size: 1.1rem;
+    transition: transform 0.3s;
+}
+
+.search-button:hover i {
+    transform: scale(1.15);
+}
+
+/* Efeito de foco */
+.search-box:focus-within {
+    box-shadow: 0 6px 20px rgba(255, 138, 101, 0.4);
+    border-color: #ff8a65;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .search-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .search-box {
+        height: 45px;
+    }
+    
+    .search-box input {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-section {
+        margin: 20px auto;
+    }
+    
+    .search-box {
+        height: 42px;
+        border-radius: 25px;
+    }
+    
+    .search-button {
+        width: 45px;
+    }
+    
+    .search-button:hover {
+        width: 50px;
+    }
+}

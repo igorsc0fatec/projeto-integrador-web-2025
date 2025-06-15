@@ -73,7 +73,7 @@ foreach ($itens as $item) {
                         </div>
                         <div class="info-card">
                             <h3>Status do Pedido</h3>
-                            <p><?php echo ucfirst($pedido['status_pedido']); ?></p>
+                            <p><?php echo ucfirst($pedido['tipo_status']); ?></p>
                         </div>
                         <div class="info-card">
                             <h3>Método de Pagamento</h3>
@@ -181,38 +181,38 @@ foreach ($itens as $item) {
                     </h2>
                     
                     <div class="order-timeline">
-                        <div class="timeline-item <?php echo in_array($pedido['status_pedido'], ['processando', 'confirmado', 'enviado', 'entregue']) ? 'completed' : ''; ?>">
+                        <div class="timeline-item <?php echo in_array($pedido['tipo_status'], ['processando', 'confirmado', 'enviado', 'entregue']) ? 'completed' : ''; ?>">
                             <div class="timeline-content">
                                 <h4>Pedido realizado</h4>
                                 <p><?php echo $dataPedido; ?></p>
                             </div>
                         </div>
                         
-                        <div class="timeline-item <?php echo in_array($pedido['status_pedido'], ['confirmado', 'enviado', 'entregue']) ? 'completed' : ($pedido['status_pedido'] == 'processando' ? 'active' : ''); ?>">
+                        <div class="timeline-item <?php echo in_array($pedido['tipo_status'], ['confirmado', 'enviado', 'entregue']) ? 'completed' : ($pedido['tipo_status'] == 'processando' ? 'active' : ''); ?>">
                             <div class="timeline-content">
                                 <h4>Pagamento confirmado</h4>
-                                <p><?php echo $pedido['status_pedido'] == 'processando' ? $dataPedido : ''; ?></p>
+                                <p><?php echo $pedido['tipo_status'] == 'processando' ? $dataPedido : ''; ?></p>
                             </div>
                         </div>
                         
-                        <div class="timeline-item <?php echo in_array($pedido['status_pedido'], ['enviado', 'entregue']) ? 'completed' : ($pedido['status_pedido'] == 'confirmado' ? 'active' : ''); ?>">
+                        <div class="timeline-item <?php echo in_array($pedido['tipo_status'], ['enviado', 'entregue']) ? 'completed' : ($pedido['tipo_status'] == 'confirmado' ? 'active' : ''); ?>">
                             <div class="timeline-content">
                                 <h4>Preparando para envio</h4>
-                                <p><?php echo $pedido['status_pedido'] == 'confirmado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 1 day')) : 'Em breve'; ?></p>
+                                <p><?php echo $pedido['tipo_status'] == 'confirmado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 1 day')) : 'Em breve'; ?></p>
                             </div>
                         </div>
                         
-                        <div class="timeline-item <?php echo $pedido['status_pedido'] == 'entregue' ? 'completed' : ($pedido['status_pedido'] == 'enviado' ? 'active' : ''); ?>">
+                        <div class="timeline-item <?php echo $pedido['tipo_status'] == 'entregue' ? 'completed' : ($pedido['tipo_status'] == 'enviado' ? 'active' : ''); ?>">
                             <div class="timeline-content">
                                 <h4>Enviado</h4>
-                                <p><?php echo $pedido['status_pedido'] == 'enviado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 2 days')) : 'Em breve'; ?></p>
+                                <p><?php echo $pedido['tipo_status'] == 'enviado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 2 days')) : 'Em breve'; ?></p>
                             </div>
                         </div>
                         
-                        <div class="timeline-item <?php echo $pedido['status_pedido'] == 'entregue' ? 'completed' : ''; ?>">
+                        <div class="timeline-item <?php echo $pedido['tipo_status'] == 'entregue' ? 'completed' : ''; ?>">
                             <div class="timeline-content">
                                 <h4>Entregue</h4>
-                                <p><?php echo $pedido['status_pedido'] == 'entregue' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 5 days')) : 'Em breve'; ?></p>
+                                <p><?php echo $pedido['tipo_status'] == 'entregue' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 5 days')) : 'Em breve'; ?></p>
                             </div>
                         </div>
                     </div>
@@ -244,7 +244,7 @@ foreach ($itens as $item) {
                     </div>
                     
                     <div class="action-btns">
-                        <a href="#" class="btn btn-primary">Acompanhar Entrega</a>
+                        <a href="#" class="btn btn-primary">Realizar Pagamento</a>
                         <a href="../view/index.php" class="btn btn-outline">Voltar às Compras</a>
                     </div>
                 </div>

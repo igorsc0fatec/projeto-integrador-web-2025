@@ -45,7 +45,7 @@ if (isset($_GET['id'])) {
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../assets/css/style-menu.css">
     <link rel="stylesheet" href="../assets/css/style-form-table.css">
-
+    <link rel="stylesheet" href="../assets/css/style-tabela.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -61,33 +61,24 @@ if (isset($_GET['id'])) {
             <nav>
                 <div class="nav-container">
                     <a href="dashboard.php">
-                        <img id="logo" src="../assets/img-site/logo.png" alt="Logo Confeitaria">
+                        <img id="logo" src="../assets/img-site/logo.png" alt="JobFinder">
                     </a>
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Olá, ' . $_SESSION['nome'];
-                        } else {
-                            echo "Olá, Visitante";
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
 
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
-                        <ul>
-                            <li><a href="cadastrar-produto.php">Produtos</a></li>
-                            <li><a href="cadastrar-personalizado.php">Personalizados</a></li>
-                            <li><a href="regras-confeitaria.php">Regras</a></li>
-                            <li><a href="meus-produtos.php">Voltar </a></li>
-                        </ul>
-                        <li>
-                            <form action="../view/logout.php" method="POST">
-                                <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
-                                <button type="submit" class="fa fa-logout logado"><i class="fa fa-sign-out"
-                                        style="font-size:20px"></i></button>
-                            </form>
-                        </li>
+                        <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
+                        <li><a href="meus-contatos.php">Conversas</a></li>
+                        <li><a href="editar-confeitaria.php">Meus Dados</a></li>
+                        <li><a href="../view/pedir-suporte.php">Suporte</a></li>
+                        <li><a href="dashboard.php">Voltar </a></li>
                     </ul>
                 </div>
             </nav>
@@ -161,36 +152,30 @@ if (isset($_GET['id'])) {
     </div>
 
     <div>
-        <h2>Sua lista de Formatos</h2>
-
-        <form id="search-form" method="post">
-            <div class="pesquisa">
-                <label for="pesq">Buscar Formato</label>
-                <div class="input-wrapper">
-                    <input id="pesq" type="text" name="pesq" placeholder="Digite o nome do formato/ex: redondo"
-                        required>
-                    <button type="submit" name="pesquisa">Pesquisar</button>
-                </div>
+        <div class="search-section">
+            <h2>Sua lista de Formatos</h2>
+            
+            <div class="search-container">
+                <form id="search-form" method="post" class="modern-search-form">
+                    <div class="search-box">
+                        <input id="pesq" type="text" name="pesq" placeholder="Buscar produtos..." required>
+                        <button type="submit" name="pesquisa" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
-        <br>
+        </div>
+
 
         <div class="tabela-scroll">
             <table id="minhaTabela">
                 <thead>
                     <tr>
-                        <th>
-                            <center>Descrição</center>
-                        </th>
-                        <th>
-                            <center>Valor Peso</center>
-                        </th>
-                        <th>
-                            <center>Excluir</center>
-                        </th>
-                        <th>
-                            <center>Editar</center>
-                        </th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Descrição</th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Valor por Peso</th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Excluir</th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Editar</th>
                     </tr>
                 </thead>
                 <tbody id="formatos">

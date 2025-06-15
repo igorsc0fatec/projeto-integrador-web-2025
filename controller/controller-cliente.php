@@ -29,7 +29,8 @@ class ControllerCliente
             $idUsuario = $this->usuario->buscarUltimoUsuario();
 
             $this->dao->execute("INSERT INTO tb_cliente (nome_cliente, cpf_cliente, data_nasc, id_usuario) 
-            VALUES ('{$this->cliente->getNomeCliente()}', '{$this->cliente->getCpfCliente()}', '{$this->cliente->getNascCliente()}', '$idUsuario')");
+            VALUES ('{$this->cliente->getNomeCliente()}', '{$this->cliente->getCpfCliente()}', '{$this->cliente->getNascCliente()}', 
+            '$idUsuario')");
 
             $idCliente = $this->buscarUltimoCliente();
             $result = $this->addEndereco($idCliente);
@@ -48,8 +49,9 @@ class ControllerCliente
         try {
             $this->cliente->setCpfCliente($this->dao->escape_string($_POST['cpfCliente']));
 
-            $sql = $this->dao->getData("SELECT COUNT(*) as total FROM tb_cliente WHERE cpf_cliente = '{$this->cliente->getCpfCliente()}'");
-            foreach ($sql as $row) { // Changed variable name from 'cpf' to 'row'
+            $sql = $this->dao->getData("SELECT COUNT(*) as total FROM tb_cliente 
+            WHERE cpf_cliente = '{$this->cliente->getCpfCliente()}'");
+            foreach ($sql as $row) {
                 if ($row['total'] > 0) {
                     return true;
                 } else {

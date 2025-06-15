@@ -52,27 +52,19 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Ola, ' . $_SESSION['nome'];
-                        } else {
-                            echo "Ola, Visitante";
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
 
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
-                        <li><a href="pedidos-personalizados.php">Personalizados</a></li>
-                        <li><a href="cadastrar-tipos-produtos.php">Tipos de Produtos</a></li>
+                        <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="meus-contatos.php">Conversas</a></li>
                         <li><a href="editar-confeitaria.php">Meus Dados</a></li>
                         <li><a href="../view/pedir-suporte.php">Suporte</a></li>
-                        <li>
-                            <form action="../view/logout.php" method="POST">
-                                <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
-                                <button type="submit" class="fa fa-logout logado"><i class="fa fa-sign-out"
-                                        style="font-size:20px"></i></button>
-                            </form>
-                        </li>
+                        <li><a href="cadastrar-produto.php">Voltar </a></li>
                     </ul>
                 </div>
             </nav>
@@ -128,11 +120,11 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                             <?php
                             if (!empty($tiposProdutos)) {
                                 foreach ($tiposProdutos as $tipo) {
-                                    ?>
+                            ?>
                                     <option value="<?php echo $tipo['id_tipo_produto']; ?>">
                                         <?php echo $tipo['desc_tipo_produto'] ?>
                                     </option>
-                                    <?php
+                            <?php
                                 }
                             } else {
                                 echo '<option value="">Nenhum tipo cadastrado</option>';
@@ -155,7 +147,7 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                         <div class="range-container">
                             <input type="range" id="distanciaMaxima" name="distanciaMaxima" min="0" max="150" value=<?php echo $_GET['limite'] ?>
                                 step="1" oninput="updateDistanceValue(this.value)">
-                            <span id="distanceValue">30 km</span>
+                            <span id="distanceValue"><?php echo $_GET['limite'] ?> km</span>
                         </div>
                     </div>
 

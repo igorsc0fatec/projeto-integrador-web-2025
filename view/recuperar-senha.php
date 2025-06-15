@@ -27,6 +27,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'validar_codigo') {
     echo json_encode($response);
     exit;
 }
+
+// Adicione isso junto com os outros actions no topo do arquivo
+if (isset($_GET['action']) && $_GET['action'] == 'atualizar_senha') {
+    if (isset($_POST['nova_senha'], $_POST['idUsuario'])) {
+        $novaSenha = $_POST['nova_senha'];
+        $idUsuario = $_POST['idUsuario'];
+        
+        if ($usuarioController->updateSenha($novaSenha, $idUsuario)) {
+            echo 'success';
+        } else {
+            echo 'error';
+        }
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -112,70 +127,130 @@ if (isset($_GET['action']) && $_GET['action'] == 'validar_codigo') {
     <?php
     function gerarScriptSenha($idUsuario)
     {
-        $idUsuarioJson = json_encode($idUsuario);
 
         return "
-    <script>
-        function verificarCodigoSenha() {
-            Swal.fire({
-                title: 'Digite o código enviado para o seu e-mail',
-                input: 'text',
-                showCancelButton: true,
-                confirmButtonText: 'Verificar',
-                cancelButtonText: 'Cancelar',
-                inputValidator: (value) => {
-                    if (!value) {
-                        return 'Você deve digitar um código!';
-                    }
+<script>
+    function verificarCodigoSenha() {
+        Swal.fire({
+            title: 'Digite o código enviado para o seu e-mail',
+            input: 'text',
+            showCancelButton: true,
+            confirmButtonText: 'Verificar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Você deve digitar um código!';
                 }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const codigoDigitado = result.value;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const codigoDigitado = result.value;
 
-                    // Faz a requisição AJAX para validar o código
-                    $.ajax({
-                        url: 'recuperar-senha.php?action=validar_codigo',
-                        method: 'POST',
-                        data: {
-                            codigoDigitado: codigoDigitado,
-                            idUsuario: $idUsuarioJson
-                        },
-                        success: function(response) {
-                            if (response === 'valido') {
-                                // Código válido, exibe o alerta 'CORRETO'
-                                Swal.fire({
-                                    title: 'CORRETO',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                });
-                            } else {
-                                // Código inválido ou expirado
-                                Swal.fire('Erro', 'Código inválido ou expirado. Tente novamente.', 'error').then(() => {
-                                    verificarCodigoSenha();  // Reexibe o prompt
-                                });
-                            }
-                        },
-                        error: function() {
-                            Swal.fire('Erro', 'Erro na requisição. Tente novamente.', 'error');
+                // Faz a requisição AJAX para validar o código
+                $.ajax({
+                    url: 'recuperar-senha.php?action=validar_codigo',
+                    method: 'POST',
+                    data: {
+                        codigoDigitado: codigoDigitado,
+                        idUsuario: " . $idUsuario . "
+                    },
+                    success: function(response) {
+                        if (response === 'valido') {
+                        // Código válido: mostra os campos de senha
+                            Swal.fire({
+                                title: 'Código válido!',
+                                text: 'Agora defina sua nova senha.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                    // Oculta o campo de email e botão Enviar
+                                            $('#emailUsuario').closest('.input-box').hide();
+                                            $('#enviar').hide();
+
+                                    // Adiciona os campos de nova senha dinamicamente
+                                            const form = $('#form-recuperar-senha');
+                                            form.append(`
+                                                <div class='input-box'>
+                                                    <label for='nova_senha'>Nova Senha*</label>
+                                                    <div class='dados'>
+                                                        <input type='password' id='nova_senha' name='nova_senha' required>
+                                                    </div>
+                                                </div>
+                                                <div class='input-box'>
+                                                    <label for='confirmar_senha'>Confirmar Senha*</label>
+                                                    <div class='dados'>
+                                                        <input type='password' id='confirmar_senha' name='confirmar_senha' required>
+                                                    </div>
+                                                </div>
+                                                    <input type='hidden' name='idUsuario' value='${idUsuario}'>
+                                                <div class='continue-button'>
+                                                    <button type='button' id='salvar-senha'>Salvar</button>
+                                                </div>
+                                        `);
+
+                                            // Adiciona o evento para salvar a senha
+                                                $('#salvar-senha').click(function() {
+                                                    const novaSenha = $('#nova_senha').val();
+                                                    const confirmarSenha = $('#confirmar_senha').val();
+
+                                                    if (novaSenha !== confirmarSenha) {
+                                                        Swal.fire('Erro', 'As senhas não coincidem!', 'error');
+                                                        return;
+                                                    }
+
+                                                    // Envia a nova senha via AJAX
+                                                    $.ajax({
+                                                        url: 'recuperar-senha.php?action=atualizar_senha',
+                                                        method: 'POST',
+                                                    data: {
+                                                        nova_senha: novaSenha,
+                                                        idUsuario: " . $idUsuario . "
+                                                    },
+                                                    success: function(response) {
+                                                    if (response === 'success') {
+                                                        Swal.fire({
+                                                            title: 'Sucesso!',
+                                                            text: 'Senha alterada com sucesso.',
+                                                            icon: 'success'
+                                                        }).then(() => {
+                                                            window.location.href = 'index.php';
+                                                        });
+                                                    } else {
+                                                        Swal.fire('Erro', 'Erro ao atualizar a senha.', 'error');
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    });
+                        } else {
+                            // Código inválido ou expirado
+                            Swal.fire('Erro', 'Código inválido ou expirado. Tente novamente.', 'error').then(() => {
+                                verificarCodigoSenha();  // Reexibe o prompt
+                            });
                         }
-                    });
-                }
-            });
-        }
+                    },
+                    error: function() {
+                        Swal.fire('Erro', 'Erro na requisição. Tente novamente.', 'error');
+                    }
+                });
+            }
+        });
+    }
 
-        // Inicia a verificação do código
-        verificarCodigoSenha();
-    </script>";
+    // Inicia a verificação do código
+    verificarCodigoSenha();
+</script>";
     }
     ?>
 
     <?php
     if (isset($_POST['enviar'])) {
         $email = $_POST['emailUsuario'];
-        $idUsuario = $usuarioController->identificaEmail($email);
+        $resultado = $usuarioController->identificaEmail($email);
 
-        if ($idUsuario) {
-            $codigo = $usuarioController->gerarCodigo();
+        if ($resultado && isset($resultado[0]['id_usuario'])) {
+            $idUsuario = $resultado[0]['id_usuario'];
+            $codigo = $usuarioController->gerarCodigo($idUsuario);
             $usuarioController->enviaEmail($email, $codigo);
             echo gerarScriptSenha($idUsuario);
         } else {

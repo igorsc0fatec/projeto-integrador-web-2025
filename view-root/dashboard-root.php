@@ -148,6 +148,13 @@ function mostrarStatus($resolvido) {
         '<span class="badge bg-warning text-dark">Pendente</span>';
 }
 
+if (method_exists($controller, 'listarSuportesClientesCadastro')) {
+    $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : '';
+    $suportes = $controller->listarSuportesClientesCadastro($filtro);
+} else {
+    die("Erro: Método 'listarSuportesClientesCadastro' não encontrado no controller.");
+}
+
 ?>
 
 

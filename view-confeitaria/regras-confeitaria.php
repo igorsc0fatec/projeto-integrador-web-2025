@@ -34,30 +34,27 @@ if (!isset($_SESSION['idConfeitaria'])) {
 
 <body>
     <div class="container">
-    <header>
+        <header>
             <nav>
                 <div class="nav-container">
                     <a href="dashboard.php">
-                        <img id="logo" src="../assets/img-site/logo.png" alt="Logo Confeitaria">
+                        <img id="logo" src="../assets/img-site/logo.png" alt="JobFinder">
                     </a>
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Olá, ' . $_SESSION['nome'];
-                        } else {
-                            echo "Olá, Visitante";
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
 
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
-                    <ul>
                         <li><a href="meus-produtos.php">Produtos</a></li>
-                        <li><a href="cadastrar-personalizado.php">Personalizados</a></li>
-                        <li><a href="regras-confeitaria.php">Regras</a></li>
-                        <li><a href="meus-produtos.php">Voltar </a></li>
-                    </ul>
+                        <li><a href="pedidos.php">Pedidos</a></li>
+                        <li><a href="meus-contatos.php">Conversas</a></li>
+                        <li><a href="editar-confeitaria.php">Meus Dados</a></li>
+                        <li><a href="../view/pedir-suporte.php">Suporte</a></li>
                         <li>
                             <form action="../view/logout.php" method="POST">
                                 <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">

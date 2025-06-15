@@ -65,7 +65,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
         $senhaUsuario = $_POST['senhaUsuario'];
 
         // Verifica se a senha foi passada e atualiza no banco de dados
-        if ($usuarioController->updateSenha($senhaUsuario)) {
+        if ($usuarioController->updateSenha($senhaUsuario, $_SESSION['idUsuario'])) {
             $response = 'ok';
         } else {
             $response = 'erro';
@@ -352,7 +352,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
                     });
                 </script>";
         } else {
-            $codigo = $usuarioController->gerarCodigo();
+            $codigo = $usuarioController->gerarCodigo($_SESSION['idUsuario']);
             $usuarioController->enviaEmail($_POST['emailUsuario'], $codigo);
             echo gerarScriptEmail($_POST['emailUsuario']);
         }
@@ -360,10 +360,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
 
     if (isset($_POST['alterar-senha'])) {
         $novaSenha = $_POST['senhaUsuario']; // Captura a nova senha do formulário
-    
+
         // Verifica se a senha e a confirmação de senha são iguais
         if ($_POST['senhaUsuario'] === $_POST['confirmaSenha']) {
-            $codigo = $usuarioController->gerarCodigo();
+            $codigo = $usuarioController->gerarCodigo($_SESSION['idUsuario']);
             $emailUsuario = $_SESSION['emailUsuario'];
             $usuarioController->enviaEmail($emailUsuario, $codigo);
             echo gerarScriptSenha($novaSenha);
@@ -381,20 +381,22 @@ if (isset($_GET['action']) && $_GET['action'] == 'update_senha') {
     }
     ?>
 
+    <script src="js/valida-enviar.js"></script>
+
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             function loadData() {
                 $.ajax({
                     url: 'editar-usuario.php?action=fetch_data',
                     type: 'GET',
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         if (data.length > 0) {
                             var user = data[0];
                             $('#emailUsuario').val(user.email_usuario);
                         }
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log('Erro: ' + textStatus + ' - ' + errorThrown);
                     }
                 });

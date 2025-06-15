@@ -39,13 +39,13 @@ class ControllerPedido
             $this->pedido->setValorTotal($valorTotal);
             $this->pedido->setDesconto(0);
             $this->pedido->setFrete($frete);
-            $this->pedido->setStatus($this->dao->escape_string("Pedido Recebido!"));
             $this->pedido->setIdCliente($this->dao->escape_string($_SESSION['idCliente']));
             $this->pedido->setIdFormaPagamento($this->dao->escape_string($_POST['pagamento']));
             $this->pedido->setIdEnderecoCliente($this->dao->escape_string($_POST['endereco']));
 
-            $result = $this->dao->execute("INSERT INTO tb_pedido (valor_total, desconto, status, frete, id_endereco_cliente, id_forma_pagamento, id_cliente) 
-            VALUES ( {$this->pedido->getValorTotal()}, {$this->pedido->getDesconto()},'{$this->pedido->getStatus()}', {$this->pedido->getFrete()},
+            $result = $this->dao->execute("INSERT INTO tb_pedido (valor_total, desconto, frete, id_endereco_cliente, 
+            id_forma_pagamento, id_cliente) 
+            VALUES ( {$this->pedido->getValorTotal()}, {$this->pedido->getDesconto()}, {$this->pedido->getFrete()},
             {$this->pedido->getIdEnderecoCliente()}, {$this->pedido->getIdFormaPagamento()}, {$this->pedido->getIdCliente()} )");
 
             if ($result) {
@@ -112,7 +112,6 @@ class ControllerPedido
                 }
                 return false;
             }
-
         } catch (Exception $e) {
             error_log("Erro ao adicionar item ao pedido: " . $e->getMessage());
             return false;
@@ -150,7 +149,8 @@ class ControllerPedido
                 p.valor_total,
                 p.desconto,
                 p.data_pedido,
-                p.status as status_pedido,
+                p.id_status,
+                ts.tipo_status, -- <-- aqui pega o nome do status
                 p.frete as valor_frete,
                 f.forma_pagamento,
                 f.descricao as descricao_pagamento,
@@ -164,6 +164,7 @@ class ControllerPedido
             FROM tb_pedido p 
             INNER JOIN tb_forma_pagamento f ON p.id_forma_pagamento = f.id_forma_pagamento
             INNER JOIN tb_endereco_cliente ec ON p.id_endereco_cliente = ec.id_endereco_cliente
+            INNER JOIN tb_status ts ON p.id_status = ts.id_status
             WHERE p.id_pedido = {$this->dao->escape_string($idPedido)}";
 
             $pedidoResult = $this->dao->getData($pedidoQuery);
@@ -189,7 +190,6 @@ class ControllerPedido
                 'pedido' => $pedidoResult,
                 'itens' => $itensResult
             ];
-
         } catch (Exception $e) {
             throw new Exception("Erro ao visualizar pedido: " . $e->getMessage());
         }
@@ -205,7 +205,7 @@ class ControllerPedido
                 p.valor_total,
                 p.desconto,
                 p.data_pedido,
-                p.status,
+                ts.tipo_status,
                 p.frete,
                 p.id_endereco_cliente,
                 p.id_forma_pagamento,
@@ -219,6 +219,7 @@ class ControllerPedido
             INNER JOIN tb_cliente c ON p.id_cliente = c.id_cliente
             INNER JOIN tb_forma_pagamento f ON p.id_forma_pagamento = f.id_forma_pagamento
             INNER JOIN tb_endereco_cliente ec ON p.id_endereco_cliente = ec.id_endereco_cliente
+            INNER JOIN tb_status ts ON p.id_status = ts.id_status
             WHERE p.id_cliente = {$this->dao->escape_string($idCliente)}
             ORDER BY p.id_pedido DESC
         ";
@@ -248,7 +249,6 @@ class ControllerPedido
             }
 
             return $pedidos;
-
         } catch (Exception $e) {
             echo "Erro ao visualizar pedidos: " . $e->getMessage();
             return [];
@@ -257,44 +257,19 @@ class ControllerPedido
 
     public function mudarStatusPedidos()
     {
-        if (isset($_POST['alterar_status']) || isset($_POST['cancelar']) && isset($_POST['idPedido'])) {
+        if ((isset($_POST['alterar_status']) || isset($_POST['cancelar'])) && isset($_POST['idPedido'])) {
             $idPedido = $this->dao->escape_string($_POST['idPedido']);
             $novoStatus = $this->dao->escape_string($_POST['novo_status']);
 
             try {
-                // 1. Verificar o status atual do pedido
-                $queryCheck = "SELECT status, id_cliente FROM tb_pedido WHERE id_pedido = '$idPedido'";
-                $result = $this->dao->getData($queryCheck);
+                $sql = "UPDATE tb_pedido SET id_status = {$novoStatus} WHERE id_pedido = {$idPedido}";
+                $stmt = $this->dao->execute($sql);
 
-                if (empty($result)) {
-                    return false; // Pedido não encontrado
+                if ($stmt) {
+                    return true;
                 }
-
-                $pedido = $result[0];
-
-                // 3. Verificar se já foi cancelado pela confeitaria
-                if ($pedido['status'] === 'Cancelado pela Confeitaria') {
-                    return false;
-                }
-
-                // 4. Verificar se o status atual permite cancelamento
-                $statusPermitidos = []; // Status que permitem cancelamento
-                if (isset($_POST['alterar_status'])) {
-                    $statusPermitidos = ['Pedido Recebido!', 'Em Preparo!', 'Em Rota de Entrega!'];
-                } else {
-                    $statusPermitidos = ['Pedido Recebido!', 'Em Preparo!'];
-                }
-                if (!in_array($pedido['status'], $statusPermitidos)) {
-                    return false;
-                }
-
-                // 5. Atualizar o status
-                $queryUpdate = "UPDATE tb_pedido SET status = '$novoStatus' WHERE id_pedido = '$idPedido'";
-                return $this->dao->execute($queryUpdate);
-
             } catch (Exception $e) {
-                error_log("Erro ao alterar status do pedido: " . $e->getMessage());
-                return false;
+                throw new Exception("Erro ao alterar status pedido: " . $e->getMessage());
             }
         }
         return false;
@@ -307,32 +282,35 @@ class ControllerPedido
 
             $query = "
             SELECT DISTINCT
-                tp.*,
-                tfp.*,
-                tc.*,
-                tec.*,
-                tip.quantidade,
-                tip.id_itens_pedido,
-                tip.id_produto,
-                tip.id_cupom,
-                tpr.*,
-                tcu.*
-            FROM 
-                tb_pedido tp
-            JOIN 
-                tb_forma_pagamento tfp ON tp.id_forma_pagamento = tfp.id_forma_pagamento
-            JOIN 
-                tb_cliente tc ON tp.id_cliente = tc.id_cliente
-            JOIN 
-                tb_endereco_cliente tec ON tp.id_endereco_cliente = tec.id_endereco_cliente
-            JOIN 
-                tb_itens_pedido tip ON tp.id_pedido = tip.id_pedido
-            JOIN 
-                tb_produto tpr ON tip.id_produto = tpr.id_produto
-            LEFT JOIN 
-                tb_cupom tcu ON tip.id_cupom = tcu.id_cupom
-            WHERE 
-                tpr.id_confeitaria = '$idConfeitariaEscaped'
+        tp.*,
+        tfp.*,
+        tc.*,
+        tec.*,
+        tip.quantidade,
+        tip.id_itens_pedido,
+        tip.id_produto,
+        tip.id_cupom,
+        tpr.*,
+        tcu.*,
+        ts.tipo_status
+    FROM 
+        tb_pedido tp
+    JOIN 
+        tb_forma_pagamento tfp ON tp.id_forma_pagamento = tfp.id_forma_pagamento
+    JOIN 
+        tb_cliente tc ON tp.id_cliente = tc.id_cliente
+    JOIN 
+        tb_endereco_cliente tec ON tp.id_endereco_cliente = tec.id_endereco_cliente
+    JOIN 
+        tb_itens_pedido tip ON tp.id_pedido = tip.id_pedido
+    JOIN 
+        tb_produto tpr ON tip.id_produto = tpr.id_produto
+    LEFT JOIN 
+        tb_cupom tcu ON tip.id_cupom = tcu.id_cupom
+    JOIN 
+        tb_status ts ON tp.id_status = ts.id_status
+    WHERE 
+        tpr.id_confeitaria = '$idConfeitariaEscaped'
             ";
 
             $result = $this->dao->getData($query);
@@ -361,7 +339,8 @@ class ControllerPedido
                 tip.id_produto,
                 tip.id_cupom,
                 tpr.*,
-                tcu.*
+                tcu.*,
+                ts.tipo_status
             FROM 
                 tb_pedido tp
             JOIN 
@@ -376,6 +355,8 @@ class ControllerPedido
                 tb_produto tpr ON tip.id_produto = tpr.id_produto
             LEFT JOIN 
                 tb_cupom tcu ON tip.id_cupom = tcu.id_cupom
+                JOIN 
+        tb_status ts ON tp.id_status = ts.id_status
             WHERE 
                 tpr.id_confeitaria = '$idConfeitariaEscaped' AND ( tp.id_pedido LIKE '%$termoEscaped%' OR tp.status LIKE '%$termoEscaped%' ) 
             ";
@@ -393,7 +374,8 @@ class ControllerPedido
     {
         try {
             $id = $_POST['id'];
-            $sql = $this->dao->getData("SELECT * FROM tb_produto WHERE id_produto = $id");
+            $sql = $this->dao->getData("SELECT p.*, c.id_usuario FROM tb_produto p INNER JOIN 
+            tb_confeitaria c ON p.id_confeitaria = c.id_confeitaria WHERE p.id_produto = $id");
 
             if (!isset($_SESSION['carrinho'])) {
                 $_SESSION['carrinho'] = [];
@@ -426,14 +408,14 @@ class ControllerPedido
                     'valorProduto' => $sql[0]['valor_produto'],
                     'frete' => $sql[0]['frete'],
                     'quantidade' => 1,
-                    'idConfeitaria' => $sql[0]['id_confeitaria']
+                    'idConfeitaria' => $sql[0]['id_confeitaria'],
+                    'idUsuario' => $sql[0]['id_usuario']
                 ];
                 $_SESSION['carrinho'][] = $produto;
                 return 'add';
             } else {
                 return 'no add';
             }
-
         } catch (Exception $e) {
             echo "Erro ao adicionar dados ao carrinho: " . $e->getMessage();
             return false;
@@ -509,6 +491,16 @@ class ControllerPedido
         }
     }
 
+    public function status()
+    {
+        try {
+            $result = $this->dao->getData("SELECT * FROM tb_status WHERE tipo_status != 'Cancelado pelo Cliente!'");
+            return $result;
+        } catch (Exception $e) {
+            echo "Erro ao visualizar status: " . $e->getMessage();
+        }
+    }
+
     public function validarCupom($codigoCupom)
     {
         try {
@@ -577,7 +569,6 @@ class ControllerPedido
                 "porcen_desconto" => $cupom['porcen_desconto'],
                 "id_cupom" => $cupom['id_cupom']
             ]);
-
         } catch (Exception $e) {
             error_log("Erro ao validar cupom: " . $e->getMessage());
             return json_encode([
@@ -587,4 +578,3 @@ class ControllerPedido
         }
     }
 }
-?>

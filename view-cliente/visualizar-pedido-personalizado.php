@@ -32,7 +32,7 @@ $subtotal = ($pedido['valor_total'] ?? 0) + ($pedido['desconto'] ?? 0) - ($pedid
 if (isset($_POST['acompanhar'])) {
     $c = $pedido['tc_id_confeitaria'];
     $u = $pedido['id_usuario'];
-    $_POST['id'] = $c;
+    $_POST['id'] = $u;
     $configController->chat->addMensagem();
     echo "<script language='javascript' type='text/javascript'> window.location.href='chat-cliente.php?u=$u&c=$c'</script>";
     exit;
@@ -93,7 +93,7 @@ if (isset($_POST['acompanhar'])) {
                         </div>
                         <div class="info-card">
                             <h3>Método de Pagamento</h3>
-                            <p><?php echo htmlspecialchars($pedido['id_forma_pagamento'] ?? 'N/A'); ?></p>
+                            <p><?php echo htmlspecialchars($pedido['forma_pagamento'] ?? 'N/A'); ?></p>
                         </div>
                         <div class="info-card">
                             <h3>Confeitaria</h3>
@@ -187,21 +187,33 @@ if (isset($_POST['acompanhar'])) {
 
                     <div class="delivery-address">
                         <h3>Local</h3>
-                        <p><?php echo $pedido['log_confeitaria']; ?>, <?php echo $pedido['num_local']; ?>
+                        <p>Endereço <?php echo $pedido['log_confeitaria']; ?>, <?php echo $pedido['num_local']; ?>
                             <?php echo !empty($pedido['complemento']) ? '- ' . $pedido['complemento'] : ''; ?>
                         </p>
                         <p>Bairro <?php echo $pedido['bairro_confeitaria']; ?></p>
-                        <p><?php echo $pedido['cidade_confeitaria']; ?> - <?php echo $pedido['uf_confeitaria']; ?></p>
+                        <p>Cidade <?php echo $pedido['cidade_confeitaria']; ?> - <?php echo $pedido['uf_confeitaria']; ?></p>
                         <p>CEP: <?php echo $pedido['cep_confeitaria']; ?></p>
                     </div>
 
-                    <h3 class="section-title">Método de Entrega</h3>
+                    Endereço de Entrega
+                    </h2>
+
+                    <div class="delivery-address">
+                        <h3>Local</h3>
+                        <p>Endereço <?php echo $pedido['log_cliente'] ?? 'N/A'; ?>, <?php echo $pedido['num_local'] ?? 'N/A'; ?>
+                            <?php echo !empty($pedido['complemento']) ? '- ' . $pedido['complemento'] : ''; ?>
+                        </p>
+                        <p>Bairro <?php echo $pedido['bairro_cliente'] ?? 'N/A'; ?></p>
+                        <p>Cidade <?php echo $pedido['cidade_cliente'] ?? 'N/A'; ?> - <?php echo $pedido['uf_cliente'] ?? 'N/A'; ?></p>
+                        <p>CEP: <?php echo $pedido['cep_cliente'] ?? 'N/A'; ?></p>
+                    </div>
+
+                    <!--<h3 class="section-title">Método de Entrega</h3>
                     <div class="info">
                         <h3>Entrega Padrão</h3>
-                        <p>Previsão de entrega: <?php
-                        echo 'Em processamento';
-                        ?></p>
-                    </div>
+                        <p>Previsão de entrega:
+                        </p>
+                    </div>-->
                 </div>
 
                 <div class="order-section">
@@ -224,7 +236,7 @@ if (isset($_POST['acompanhar'])) {
                             </svg>
                         </div>
                         <div class="info">
-                            <h3><?php echo $pedido['id_forma_pagamento']; ?></h3>
+                            <h3><?php echo $pedido['forma_pagamento']; ?></h3>
                             <p>Valor total: R$ <?php echo number_format($pedido['valor_total'], 2, ',', '.'); ?></p>
                         </div>
                     </div>
@@ -242,7 +254,7 @@ if (isset($_POST['acompanhar'])) {
 
                     <div class="order-timeline">
                         <div
-                            class="timeline-item <?php echo in_array($pedido['status'], ['processando', 'confirmado', 'enviado', 'entregue']) ? 'completed' : ''; ?>">
+                            class="timeline-item <?php echo in_array($pedido['tipo_status'], ['processando', 'confirmado', 'enviado', 'entregue']) ? 'completed' : ''; ?>">
                             <div class="timeline-content">
                                 <h4>Pedido realizado</h4>
                                 <p><?php echo $dataPedido; ?></p>
@@ -250,35 +262,35 @@ if (isset($_POST['acompanhar'])) {
                         </div>
 
                         <div
-                            class="timeline-item <?php echo in_array($pedido['status'], ['confirmado', 'enviado', 'entregue']) ? 'completed' : ($pedido['status'] == 'processando' ? 'active' : ''); ?>">
+                            class="timeline-item <?php echo in_array($pedido['tipo_status'], ['confirmado', 'enviado', 'entregue']) ? 'completed' : ($pedido['tipo_status'] == 'processando' ? 'active' : ''); ?>">
                             <div class="timeline-content">
                                 <h4>Pagamento confirmado</h4>
-                                <p><?php echo $pedido['status'] == 'processando' ? $dataPedido : ''; ?></p>
+                                <p><?php echo $pedido['tipo_status'] == 'processando' ? $dataPedido : ''; ?></p>
                             </div>
                         </div>
 
                         <div
-                            class="timeline-item <?php echo in_array($pedido['status'], ['enviado', 'entregue']) ? 'completed' : ($pedido['status'] == 'confirmado' ? 'active' : ''); ?>">
+                            class="timeline-item <?php echo in_array($pedido['tipo_status'], ['enviado', 'entregue']) ? 'completed' : ($pedido['tipo_status'] == 'confirmado' ? 'active' : ''); ?>">
                             <div class="timeline-content">
                                 <h4>Preparando para envio</h4>
-                                <p><?php echo $pedido['status'] == 'confirmado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 1 day')) : 'Em breve'; ?>
+                                <p><?php echo $pedido['tipo_status'] == 'confirmado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 1 day')) : 'Em breve'; ?>
                                 </p>
                             </div>
                         </div>
 
                         <div
-                            class="timeline-item <?php echo $pedido['status'] == 'entregue' ? 'completed' : ($pedido['status'] == 'enviado' ? 'active' : ''); ?>">
+                            class="timeline-item <?php echo $pedido['tipo_status'] == 'entregue' ? 'completed' : ($pedido['tipo_status'] == 'enviado' ? 'active' : ''); ?>">
                             <div class="timeline-content">
                                 <h4>Enviado</h4>
-                                <p><?php echo $pedido['status'] == 'enviado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 2 days')) : 'Em breve'; ?>
+                                <p><?php echo $pedido['tipo_status'] == 'enviado' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + 2 days')) : 'Em breve'; ?>
                                 </p>
                             </div>
                         </div>
 
-                        <div class="timeline-item <?php echo $pedido['status'] == 'entregue' ? 'completed' : ''; ?>">
+                        <div class="timeline-item <?php echo $pedido['tipo_status'] == 'entregue' ? 'completed' : ''; ?>">
                             <div class="timeline-content">
                                 <h4>Entregue</h4>
-                                <p><?php echo $pedido['status'] == 'entregue' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + ' . $pedido['limite_entrega'] . ' days')) : 'Em breve'; ?>
+                                <p><?php echo $pedido['tipo_status'] == 'entregue' ? date('d/m/Y - H:i', strtotime($pedido['data_pedido'] . ' + ' . $pedido['limite_entrega'] . ' days')) : 'Em breve'; ?>
                                 </p>
                             </div>
                         </div>

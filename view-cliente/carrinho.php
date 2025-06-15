@@ -274,7 +274,7 @@ $numProdutosCarrinho = count($carrinho);
                             Voltar às compras
                         </a>
                     <?php else: ?>
-                        <a href="dados-confeitaria.php?c=<?php echo $carrinho[0]['idConfeitaria']; ?>"
+                        <a href="dados-confeitaria.php?c=<?php echo $carrinho[0]['idConfeitaria']; ?>&u=<?php echo $carrinho[0]['idUsuario'] ?>"
                             class="btn btn-lg btn-default md-btn-flat mt-2 mr-3 btn-link-style">
                             Voltar às compras
                         </a>

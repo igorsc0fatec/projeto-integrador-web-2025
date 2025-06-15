@@ -200,15 +200,15 @@ class ControllerUsuario
         }
     }
 
-    public function updateSenha($senhaUsuario)
+    public function updateSenha($senhaUsuario, $idUsuario)
     {
         try {
-            $this->usuario->setEmailUsuario($this->dao->escape_string($_SESSION['emailUsuario']));
+            $this->usuario->setIdUsuario($this->dao->escape_string($idUsuario));
             $this->usuario->setSenhaUsuario($this->dao->escape_string($senhaUsuario));
 
             $criptoSenha = password_hash($this->usuario->getSenhaUsuario(), PASSWORD_DEFAULT);
 
-            $result = $this->dao->execute("UPDATE tb_usuario SET senha_usuario='$criptoSenha' WHERE email_usuario='{$this->usuario->getEmailUsuario()}'");
+            $result = $this->dao->execute("UPDATE tb_usuario SET senha_usuario='$criptoSenha' WHERE id_usuario='{$this->usuario->getIdUsuario()}'");
             if ($result) {
                 return true;
             } else {
@@ -246,7 +246,8 @@ class ControllerUsuario
             $this->suporte->setIdUsuario($_SESSION['idUsuario']);
 
             $result = $this->dao->execute("INSERT INTO tb_suporte(titulo_suporte, desc_suporte, id_tipo_suporte, id_usuario) 
-            VALUES('{$this->suporte->getTitulo()}','{$this->suporte->getDescSuporte()}', {$this->suporte->getIdTipoSuporte()}, {$this->suporte->getIdUsuario()})");
+            VALUES('{$this->suporte->getTitulo()}','{$this->suporte->getDescSuporte()}', {$this->suporte->getIdTipoSuporte()}, 
+            {$this->suporte->getIdUsuario()})");
 
             if ($result) {
                 return true;
@@ -284,7 +285,7 @@ class ControllerUsuario
         }
     }
 
-    function gerarCodigo()
+    function gerarCodigo($idUsuario)
     {
         try {
             // Gera um código aleatório de 6 dígitos
@@ -293,13 +294,6 @@ class ControllerUsuario
                 $codigo .= mt_rand(0, 9);  // Gera um número aleatório entre 0 e 9 e concatena no código
             }
 
-            if (isset($_SESSION['idUsuario'])) {
-                $idUsuario = $_SESSION['idUsuario'];
-            } else {
-                $idUsuario = $this->buscarUltimoUsuario(); // Assumindo que este método existe e retorna o último ID de usuário inserido
-            }
-
-            // Insere o código no banco de dados com status 'pendente'
             $this->dao->execute("INSERT INTO tb_codigo (id_usuario, codigo, status)
                 VALUES ('{$idUsuario}', '{$codigo}', 0)"); // Assumindo 0 para 'pendente'
 

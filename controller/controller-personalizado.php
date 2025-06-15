@@ -20,20 +20,15 @@ class ControllerPersonalizado
             $this->personalizado->setDescPersonalizado($this->dao->escape_string($_POST['descProduto']));
             $this->personalizado->setIdTipoProduto($this->dao->escape_string($_POST['tiposProduto']));
             $this->personalizado->setDistanciaMaxima($this->dao->escape_string($_POST['distanciaMaxima']));
-
             $campos = ['Cobertura', 'Decoracao', 'Formato', 'Massa', 'Recheio'];
-
             foreach ($campos as $campo) {
                 $valor = isset($_POST["ativo$campo"]) ? $_POST["ativo$campo"] : 0;
                 $this->personalizado->{"set$campo"}($valor);
             }
-
             $uploadDir = 'img/img-personalizado/';
-
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
-
             $imagem_url = null;
             if ($_FILES['img']['error'] == UPLOAD_ERR_OK) {
                 $imagem_tmp = $_FILES['img']['tmp_name'];
@@ -46,17 +41,17 @@ class ControllerPersonalizado
                     throw new Exception("Erro ao mover o arquivo de imagem.");
                 }
             }
-
             $cobertura = $this->personalizado->getCobertura() ? 1 : 0;
             $decoracao = $this->personalizado->getDecoracao() ? 1 : 0;
             $formato = $this->personalizado->getFormato() ? 1 : 0;
             $massa = $this->personalizado->getMassa() ? 1 : 0;
             $recheio = $this->personalizado->getRecheio() ? 1 : 0;
-
-            $result = $this->dao->execute("INSERT INTO tb_personalizado (nome_personalizado, desc_personalizado, img_personalizado, cobertura_ativa, decoracao_ativa, formato_ativa,
+            $result = $this->dao->execute("INSERT INTO tb_personalizado (nome_personalizado, desc_personalizado, img_personalizado, 
+            cobertura_ativa, decoracao_ativa, formato_ativa,
             massa_ativa, recheio_ativa, limite_entrega, id_tipo_produto, id_confeitaria) 
-            VALUES ('{$this->personalizado->getNomePersonalizado()}', '{$this->personalizado->getDescPersonalizado()}','$imagem_url', '{$cobertura}','{$decoracao}','{$formato}',
-            '{$massa}','{$recheio}', {$this->personalizado->getDistanciaMaxima()}, {$this->personalizado->getIdTipoProduto()}, {$_SESSION['idConfeitaria']})");
+            VALUES ('{$this->personalizado->getNomePersonalizado()}', '{$this->personalizado->getDescPersonalizado()}','$imagem_url', 
+            '{$cobertura}','{$decoracao}','{$formato}','{$massa}','{$recheio}', 
+            {$this->personalizado->getDistanciaMaxima()}, {$this->personalizado->getIdTipoProduto()}, {$_SESSION['idConfeitaria']})");
 
             if ($result) {
                 return true;
@@ -166,20 +161,15 @@ class ControllerPersonalizado
             $this->personalizado->setIdTipoProduto($this->dao->escape_string($_POST['tiposProduto']));
             $this->personalizado->setDistanciaMaxima($this->dao->escape_string($_POST['distanciaMaxima']));
             $this->personalizado->setAtivoPersonalizado($_POST['ativo']);
-
             $campos = ['Cobertura', 'Decoracao', 'Formato', 'Massa', 'Recheio'];
-
             foreach ($campos as $campo) {
                 $valor = isset($_POST["ativo$campo"]) ? $_POST["ativo$campo"] : 0;
                 $this->personalizado->{"set$campo"}($valor);
             }
-
             $uploadDir = 'img/img-personalizado/';
-
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
-
             $imagem_url = null;
             if ($_FILES['img']['error'] == UPLOAD_ERR_OK) {
                 $imagem_tmp = $_FILES['img']['tmp_name'];
@@ -192,7 +182,6 @@ class ControllerPersonalizado
                     throw new Exception("Erro ao mover o arquivo de imagem.");
                 }
             }
-
             $cobertura = $this->personalizado->getCobertura() ? 1 : 0;
             $decoracao = $this->personalizado->getDecoracao() ? 1 : 0;
             $formato = $this->personalizado->getFormato() ? 1 : 0;

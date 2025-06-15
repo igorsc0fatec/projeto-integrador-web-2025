@@ -39,7 +39,7 @@ if (isset($_GET['id'])) {
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../assets/css/style-menu.css">
     <link rel="stylesheet" href="../assets/css/style-form-table.css">
-
+    <link rel="stylesheet" href="../assets/css/style-tabela.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/scrollreveal"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -169,9 +169,9 @@ if (isset($_GET['id'])) {
         <table id="minhaTabela">
             <thead>
                 <tr>
-                    <th>Telefone</th>
-                    <th>Tipo</th>
-                    <th>Excluir</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Telefone</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Tipo</th>
+                    <th style="background-color:rgb(0, 0, 0); color: white;">Excluir</th>
                 </tr>
             </thead>
             <tbody id="telefones">
@@ -182,18 +182,18 @@ if (isset($_GET['id'])) {
         <script src="js/valida-enviar.js"></script>
 
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 function loadData() {
                     $.ajax({
                         url: 'cadastrar-telefone-cliente.php?action=fetch_data',
                         type: 'GET',
                         dataType: 'json',
-                        success: function (data) {
+                        success: function(data) {
                             var tableBody = $('#telefones');
                             if (data.length === 0) {
                                 tableBody.append('<tr><td colspan="3">Você não tem nenhum telefone no momento</td></tr>');
                             } else {
-                                data.forEach(function (telefone) {
+                                data.forEach(function(telefone) {
                                     var row = $('<tr></tr>');
                                     row.append('<td>' + telefone.num_telefone + '</td>');
                                     row.append('<td>' + telefone.tipo_telefone + '</td>');
@@ -202,7 +202,7 @@ if (isset($_GET['id'])) {
                                 });
                             }
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
+                        error: function(jqXHR, textStatus, errorThrown) {
                             console.log('Erro: ' + textStatus + ' - ' + errorThrown);
                         }
                     });
@@ -223,8 +223,10 @@ if (isset($_GET['id'])) {
                         $.ajax({
                             url: 'cadastrar-telefone-cliente.php?id=' + idTelefone,
                             type: 'POST',
-                            data: { idTelefone: idTelefone },
-                            success: function (response) {
+                            data: {
+                                idTelefone: idTelefone
+                            },
+                            success: function(response) {
                                 Swal.fire(
                                     'Excluído!',
                                     'O telefone foi excluído.',
@@ -233,7 +235,7 @@ if (isset($_GET['id'])) {
                                     window.location.href = 'cadastrar-telefone-cliente.php';
                                 });
                             },
-                            error: function (jqXHR, textStatus, errorThrown) {
+                            error: function(jqXHR, textStatus, errorThrown) {
                                 Swal.fire(
                                     'Erro!',
                                     'Ocorreu um erro ao excluir o telefone.',

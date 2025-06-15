@@ -50,27 +50,19 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Ola, ' . $_SESSION['nome'];
-                        } else {
-                            echo "Ola, Visitante";
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
 
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
-                        <li><a href="cadastrar-produto.php">Produtos</a></li>
-                        <li><a href="cadastrar-tipos-produtos.php">Tipos de Produtos</a></li>
+                        <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="meus-contatos.php">Conversas</a></li>
                         <li><a href="editar-confeitaria.php">Meus Dados</a></li>
                         <li><a href="../view/pedir-suporte.php">Suporte</a></li>
-                        <li>
-                            <form action="../view/logout.php" method="POST">
-                                <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
-                                <button type="submit" class="fa fa-logout logado"><i class="fa fa-sign-out"
-                                        style="font-size:20px"></i></button>
-                            </form>
-                        </li>
+                        <li><a href="cadastrar-personalizado.php">Voltar </a></li>
                     </ul>
                 </div>
             </nav>
@@ -114,11 +106,11 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                             <?php
                             if (!empty($tiposProdutos)) {
                                 foreach ($tiposProdutos as $tipo) {
-                                    ?>
+                            ?>
                                     <option value="<?php echo $tipo['id_tipo_produto']; ?>">
                                         <?php echo $tipo['desc_tipo_produto'] ?>
                                     </option>
-                                    <?php
+                            <?php
                                 }
                             } else {
                                 echo '<option value="">Nenhum tipo cadastrado</option>';
@@ -141,7 +133,7 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                         <div class="range-container">
                             <input type="range" id="distanciaMaxima" name="distanciaMaxima" min="0" max="150" value=<?php echo $_GET['limite'] ?>
                                 step="1" oninput="updateDistanceValue(this.value)">
-                            <span id="distanceValue">30 km</span>
+                            <span id="distanceValue"><?php echo $_GET['limite'] ?> km</span>
                         </div>
                     </div>
 
@@ -151,23 +143,23 @@ $tiposProdutos = $tipoProdutoController->viewTipoProduto();
                         <label>Opções de Personalização:</label>
                         <div class="checkbox-group">
                             <input type="checkbox" id="ativoCobertura" name="ativoCobertura" value="1"
-                            <?php echo $_GET['cobertura'] == '1' ? 'checked' : ''; ?>>
+                                <?php echo $_GET['cobertura'] == '1' ? 'checked' : ''; ?>>
                             <label for="ativoCobertura">Cobertura</label>
 
                             <input type="checkbox" id="ativoDecoracao" name="ativoDecoracao" value="1"
-                            <?php echo $_GET['decoracao'] == '1' ? 'checked' : ''; ?>>
+                                <?php echo $_GET['decoracao'] == '1' ? 'checked' : ''; ?>>
                             <label for="ativoDecoracao">Decoração</label>
 
                             <input type="checkbox" id="ativoFormato" name="ativoFormato" value="1"
-                            <?php echo $_GET['formato'] == '1' ? 'checked' : ''; ?>>
+                                <?php echo $_GET['formato'] == '1' ? 'checked' : ''; ?>>
                             <label for="ativoFormato">Formato</label>
 
                             <input type="checkbox" id="ativoMassa" name="ativoMassa" value="1"
-                            <?php echo $_GET['massa'] == '1' ? 'checked' : ''; ?>>
+                                <?php echo $_GET['massa'] == '1' ? 'checked' : ''; ?>>
                             <label for="ativoMassa">Massa</label>
 
                             <input type="checkbox" id="ativoRecheio" name="ativoRecheio" value="1"
-                            <?php echo $_GET['recheio'] == '1' ? 'checked' : ''; ?>>
+                                <?php echo $_GET['recheio'] == '1' ? 'checked' : ''; ?>>
                             <label for="ativoRecheio">Recheio</label>
                         </div>
                     </div>

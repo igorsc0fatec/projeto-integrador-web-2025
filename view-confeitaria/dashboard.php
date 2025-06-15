@@ -33,7 +33,7 @@ function getDadosGraficoPorPeriodo($periodo, $pedidos, $pedidosPersonalizados)
     $todosPedidos = array_merge($pedidos, $pedidosPersonalizados);
 
     foreach ($todosPedidos as $pedido) {
-        if (strtolower($pedido['status']) !== 'entregue!') {
+        if (strtolower($pedido['tipo_status']) !== 'entregue!') {
             continue;
         }
 
@@ -121,7 +121,7 @@ function getDadosGenericos($periodo, $pedidos, $pedidosPersonalizados, $mensagen
             'id' => $pedido['id_pedido'],
             'data' => date('Y-m-d H:i', strtotime($pedido['data_pedido'])),
             'valor' => $pedido['valor_total'],
-            'status' => $pedido['status'],
+            'status' => $pedido['tipo_status'],
             'tipo' => 'normal'
         ];
 
@@ -142,7 +142,7 @@ function getDadosGenericos($periodo, $pedidos, $pedidosPersonalizados, $mensagen
             'id' => $pedido['id_pedido_personalizado'],
             'data' => date('Y-m-d H:i', strtotime($pedido['data_pedido'])),
             'valor' => $pedido['valor_total'],
-            'status' => $pedido['status'],
+            'status' => $pedido['tipo_status'],
             'tipo' => 'personalizado'
         ];
 
@@ -166,7 +166,7 @@ function getDadosGenericos($periodo, $pedidos, $pedidosPersonalizados, $mensagen
 
         // Processa pedidos normais
         foreach ($pedidosNormais as $pedido) {
-            if (in_array($pedido['status'], $cancelados)) {
+            if (in_array($pedido['tipo_status'], $cancelados)) {
                 continue;
             }
 
@@ -187,7 +187,7 @@ function getDadosGenericos($periodo, $pedidos, $pedidosPersonalizados, $mensagen
 
         // Processa pedidos personalizados
         foreach ($pedidosPersonalizados as $pedido) {
-            if (in_array($pedido['status'], $cancelados)) {
+            if (in_array($pedido['tipo_status'], $cancelados)) {
                 continue;
             }
 
@@ -300,6 +300,7 @@ $dadosGrafico = getDadosGraficoPorPeriodo($periodo, $pedidos, $pedidosPersonaliz
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
                         <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="meus-contatos.php">Conversas</a></li>
                         <li><a href="editar-confeitaria.php">Meus Dados</a></li>
                         <li><a href="../view/pedir-suporte.php">Suporte</a></li>

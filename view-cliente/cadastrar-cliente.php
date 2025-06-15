@@ -280,9 +280,9 @@ if (isset($_SESSION['carrinho'])) {
                 } else {
                     if ($configController->usuario->addUsuario()) {
                         if ($configController->cliente->addCliente()) {
-                            $codigo = $configController->usuario->gerarCodigo();
-                            $configController->usuario->enviaEmail($_POST['emailUsuario'], $codigo);
                             $idUsuario = $configController->usuario->buscarUltimoUsuario();
+                            $codigo = $configController->usuario->gerarCodigo($idUsuario);
+                            $configController->usuario->enviaEmail($_POST['emailUsuario'], $codigo);
                             echo gerarScriptCliente($_POST['emailUsuario'], $idUsuario);
                         }
                     }

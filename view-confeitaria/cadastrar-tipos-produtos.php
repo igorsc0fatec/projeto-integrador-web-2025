@@ -45,7 +45,7 @@ if (isset($_GET['id'])) {
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../assets/css/style-menu.css">
     <link rel="stylesheet" href="../assets/css/style-form-table.css">
-
+    <link rel="stylesheet" href="../assets/css/style-tabela.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -66,9 +66,7 @@ if (isset($_GET['id'])) {
                     <div class="greeting">
                         <?php
                         if (isset($_SESSION['nome'])) {
-                            echo 'Ola, ' . $_SESSION['nome'];
-                        } else {
-                            echo "Ola, Visitante";
+                            echo $_SESSION['nome'];
                         }
                         ?>
                     </div>
@@ -76,17 +74,11 @@ if (isset($_GET['id'])) {
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
                         <li><a href="meus-produtos.php">Produtos</a></li>
-                        <li><a href="cadastrar-tipos-produtos.php">Tipos de Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="meus-contatos.php">Conversas</a></li>
                         <li><a href="editar-confeitaria.php">Meus Dados</a></li>
                         <li><a href="../view/pedir-suporte.php">Suporte</a></li>
-                        <li>
-                            <form action="../view/logout.php" method="POST">
-                                <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
-                                <button type="submit" class="fa fa-logout logado"><i class="fa fa-sign-out"
-                                        style="font-size:20px"></i></button>
-                            </form>
-                        </li>
+                        <li><a href="dashboard.php">Voltar </a></li>
                     </ul>
                 </div>
             </nav>
@@ -158,33 +150,31 @@ if (isset($_GET['id'])) {
 
     <div>
 
-        <h2>Sua lista de Tipos de Produtos</h2>
-
-        <form id="search-form" method="post">
-            <div class="pesquisa">
-                <label for="pesq">Buscar Tipo de produto</label>
-                <div class="input-wrapper">
-                    <input id="pesq" type="text" name="pesq" placeholder="Digite o nome do tipo de produto/ex: bolo"
-                        required>
-                    <button type="submit" name="pesquisa">Pesquisar</button>
-                </div>
+        <div class="search-section">
+            <h2>Sua lista de Tipo de Produto</h2>
+            
+            <div class="search-container">
+                <form id="search-form" method="post" class="modern-search-form">
+                    <div class="search-box">
+                        <input id="pesq" type="text" name="pesq" placeholder="Buscar produtos..." required>
+                        <button type="submit" name="pesquisa" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
         <br>
         <div class="tabela-scroll">
             <table id="minhaTabela">
                 <thead>
+                    <thead>
                     <tr>
-                        <th>
-                            <center>Descrição</center>
-                        </th>
-                        <th>
-                            <center>Excluir</center>
-                        </th>
-                        <th>
-                            <center>Editar</center>
-                        </th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Descrição</th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Excluir</th>
+                        <th style="background-color:rgb(0, 0, 0); color: white;">Editar</th>
                     </tr>
+                </thead>
                 </thead>
                 <tbody id="tiposProdutos">
                 </tbody>

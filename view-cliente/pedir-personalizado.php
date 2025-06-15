@@ -522,6 +522,7 @@ foreach ($personalizado as $perso) {
                         <span class="total-label">Total estimado:</span>
                         <span class="total-price">R$ 0,00</span>
                     </div>
+                    <span>*Valor aproximado, podendo sofrer alterações</span>
 
                     <input type="hidden" id="idPersonalizado" name="idPersonalizado"
                         value="<?php echo htmlspecialchars($_GET['p'] ?? ''); ?>">

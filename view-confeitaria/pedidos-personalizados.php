@@ -20,6 +20,8 @@ if (isset($_GET['termo'])) {
 } else {
     $pedidosPersonalizados = $controllerPersonalizado->getPersonalizadosByConfeitaria();
 }
+
+$status = $controllerPersonalizado->status();
 ?>
 
 <!DOCTYPE html>
@@ -44,23 +46,17 @@ if (isset($_GET['termo'])) {
                         <img id="logo" src="../assets/img-site/logo.png" alt="Confeitaria">
                     </a>
                     <div class="greeting">
-                        <?php echo isset($_SESSION['nome']) ? 'Olá, ' . $_SESSION['nome'] : 'Olá, Visitante'; ?>
+                        <?php echo $_SESSION['nome']; ?>
                     </div>
 
                     <i class="fas fa-bars btn-menumobile"></i>
                     <ul class="nav-links">
                         <li><a href="meus-produtos.php">Produtos</a></li>
+                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="meus-contatos.php">Conversas</a></li>
                         <li><a href="editar-confeitaria.php">Meus Dados</a></li>
-                        <li><a href="pedidos.php">Pedidos</a></li>
                         <li><a href="../view/pedir-suporte.php">Suporte</a></li>
-                        <li>
-                            <form action="../view/logout.php" method="POST">
-                                <input type="hidden" name="id" value="<?php echo $_SESSION['idUsuario']; ?>">
-                                <button type="submit" class="fa fa-logout logado"><i class="fa fa-sign-out"
-                                        style="font-size:20px"></i></button>
-                            </form>
-                        </li>
+                        <li><a href="dashboard.php">Voltar</a></li>
                     </ul>
                 </div>
             </nav>
@@ -84,55 +80,67 @@ if (isset($_GET['termo'])) {
             <p>Não há pedidos personalizados no momento.</p>
         <?php else: ?>
             <?php foreach ($pedidosPersonalizados as $pedido): ?>
-                <div class="pedido-info">
-                    <h2>Pedido Personalizado Nº <?php echo htmlspecialchars($pedido['id_pedido_personalizado']); ?></h2>
-                    <p><strong>Data do Pedido:</strong> <?php echo date('d/m/Y', strtotime($pedido['data_pedido'])); ?></p>
+                <div class="pedido-card" data-status="<?php echo htmlspecialchars($pedido['tipo_status']); ?>">
+                    <div class="pedido-header">
+                        <h2>Pedido Personalizado Nº <?php echo htmlspecialchars($pedido['id_pedido_personalizado']); ?></h2>
+                        <div class="pedido-meta">
+                            <p><strong>Data:</strong> <?php echo date('d/m/Y H:i', strtotime($pedido['data_pedido'])); ?></p>
+                            <p><strong>Status:</strong> <?php echo htmlspecialchars($pedido['tipo_status']); ?></p>
+                            <p><strong>Cliente:</strong> <?php echo htmlspecialchars($pedido['nome_cliente']); ?></p>
+                        </div>
+                    </div>
 
-                    <p><strong>Status do Pedido:</strong></p>
+                    <div class="status-container" style="display: flex; align-items: center; gap: 20px;">
 
-                    <!-- NOVO SELECT AQUI -->
-                    <form action="" method="post">
-                        <input type="hidden" name="idPedido"
-                            value="<?php echo htmlspecialchars($pedido['id_pedido_personalizado']); ?>">
-                        <select name="novo_status" class="select-status" <?php echo ($pedido['status'] === 'Cancelado pelo Cliente' ||
-                            $pedido['status'] === 'Entregue!') ? 'disabled' : ''; ?>>
-                            <option value="Pedido Recebido!" <?php echo ($pedido['status'] === 'Pedido Recebido!') ? 'selected' : ''; ?>>Pedido Recebido!
-                            </option>
-                            <option value="Em Preparo!" <?php echo ($pedido['status'] === 'Em Preparo!') ? 'selected' : ''; ?>>Em
-                                Preparo! </option>
-                            <option value="Em Rota de Entrega!" <?php echo ($pedido['status'] === 'Em Rota de Entrega!') ? 'selected' : ''; ?>>Em Rota de Entrega!</option>
-                            <option value="Entregue!" <?php echo ($pedido['status'] === 'Entregue!') ? 'selected' : ''; ?>>
-                                Entregue!
-                            </option>
-                            <option value="Cancelado pela Confeitaria" <?php echo ($pedido['status'] === 'Cancelado pela Confeitaria') ? 'selected' : ''; ?>>Cancelado
-                            </option>
-                        </select>
+                        <form class="status-form" action="" method="post" style="display: flex; align-items: center; gap: 10px;">
+                            <input type="hidden" name="idPedido" value="<?php echo htmlspecialchars($pedido['id_pedido_personalizado']); ?>">
+                            <select name="novo_status" class="select-status" <?php echo ($pedido['tipo_status'] === 'Cancelado pelo Cliente!' || $pedido['tipo_status'] === 'Entregue!') ? 'disabled' : ''; ?>>
+                                <?php foreach ($status as $st): ?>
+                                    <option value="<?php echo $st['id_status']; ?>"
+                                        <?php echo ($pedido['tipo_status'] === $st['tipo_status']) ? 'selected' : ''; ?>>
+                                        <?php echo $st['tipo_status']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
 
-                        <?php if ($pedido['status'] !== 'Cancelado pelo Cliente'): ?>
-                            <button type="submit" name="alterar_status" class="btn-confirmar">Salvar</button>
-                        <?php endif; ?>
-                    </form>
+                            <?php if ($pedido['tipo_status'] !== 'Cancelado pelo Cliente!' && $pedido['tipo_status'] !== 'Entregue!'): ?>
+                                <button type="submit" name="alterar_status" class="btn-confirmar"><i class="fas fa-save"></i> Salvar</button>
+                                <a href="finalizar-pedido.php?id=<?php echo urlencode($pedido['id_pedido_personalizado']); ?>" class="btn-confirmar" style="text-decoration: none;"><i class="fas fa-check"></i> Finalizar</a>
+                            <?php elseif ($pedido['tipo_status'] === 'Cancelado pelo Cliente!'): ?>
+                                <p style="color: red; font-weight: bold;">O Cliente Cancelou esse Pedido!</p>
+                            <?php endif; ?>
+                        </form>
+                    </div>
 
-                    <p><strong>Valor Total:</strong> R$ <?php echo number_format($pedido['valor_total'], 2, ',', '.'); ?></p>
-                    <p><strong>Frete:</strong> R$ <?php echo number_format($pedido['frete'], 2, ',', '.'); ?></p>
-                    <p><strong>Desconto:</strong> R$ <?php echo number_format($pedido['desconto'], 2, ',', '.'); ?></p>
-                    <p><strong>Cliente:</strong> <?php echo htmlspecialchars($pedido['nome_cliente']); ?></p>
+                    <div class="pedido-content">
+                        <div class="itens-container">
+                            <div class="item">
+                                <div class="item-details">
+                                    <p class="item-title"><?php echo htmlspecialchars($pedido['nome_personalizado']); ?></p>
+                                    <p><strong>Massa:</strong> <?php echo htmlspecialchars($pedido['desc_massa']); ?></p>
+                                    <p><strong>Recheio:</strong> <?php echo htmlspecialchars($pedido['desc_recheio']); ?></p>
+                                    <p><strong>Cobertura:</strong> <?php echo htmlspecialchars($pedido['desc_cobertura']); ?></p>
+                                    <p><strong>Formato:</strong> <?php echo htmlspecialchars($pedido['desc_formato']); ?></p>
+                                    <p><strong>Decoração:</strong> <?php echo htmlspecialchars($pedido['desc_decoracao']); ?></p>
+                                    <?php if (!empty($pedido['desc_cupom'])): ?>
+                                        <p><strong>Cupom:</strong> <?php echo htmlspecialchars($pedido['desc_cupom']); ?> (<?php echo htmlspecialchars($pedido['porcen_desconto']); ?>%)</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
 
-                    <h3>Detalhes do Pedido</h3>
-                    <p><strong>Massa:</strong> <?php echo htmlspecialchars($pedido['desc_massa']); ?></p>
-                    <p><strong>Recheio:</strong> <?php echo htmlspecialchars($pedido['desc_recheio']); ?></p>
-                    <p><strong>Cobertura:</strong> <?php echo htmlspecialchars($pedido['desc_cobertura']); ?></p>
-                    <p><strong>Formato:</strong> <?php echo htmlspecialchars($pedido['desc_formato']); ?></p>
-                    <p><strong>Decoração:</strong> <?php echo htmlspecialchars($pedido['desc_decoracao']); ?></p>
-
-                    <h3>Produto Personalizado</h3>
-                    <p><strong>Nome:</strong> <?php echo htmlspecialchars($pedido['nome_personalizado']); ?></p>
-                    <?php if (!empty($pedido['img_personalizado'])): ?>
-                        <img src="../view-confeitaria/<?php echo htmlspecialchars($pedido['img_personalizado']); ?>"
-                            alt="Imagem do Produto" style="width: 150px; height: auto;">
-                    <?php endif; ?>
+                        <div class="pedido-total">
+                            <div class="total-destaque">
+                                <p><span>Subtotal:</span> <span>R$ <?php echo number_format($pedido['valor_total'] - $pedido['frete'] + $pedido['desconto'], 2, ',', '.'); ?></span></p>
+                                <p><span>Frete:</span> <span>R$ <?php echo number_format($pedido['frete'], 2, ',', '.'); ?></span></p>
+                                <p><span>Desconto:</span> <span>R$ <?php echo number_format($pedido['desconto'], 2, ',', '.'); ?></span></p>
+                                <p><span>Total:</span> <span>R$ <?php echo number_format($pedido['valor_total'], 2, ',', '.'); ?></span></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             <?php endforeach; ?>
+
         <?php endif; ?>
 
         <?php
@@ -151,7 +159,7 @@ if (isset($_GET['termo'])) {
                 <script>
                         Swal.fire({
                         title: 'Erro ao alterar status!',
-                        text: 'Status Cancelado pelo Cliente!',
+                        text: 'Pedido não foi Concluido!',
                         icon: 'error',
                         confirmButtonText: 'OK'
                         });
